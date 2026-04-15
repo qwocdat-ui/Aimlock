@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Dự Đoán iOS 26.4</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+        }
+
+        /* Khung hiển thị trang web mục tiêu */
+        #web-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Tool nổi phong cách iOS */
+        .float-tool {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 160px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 0.5px solid rgba(255, 255, 255, 0.4);
+            z-index: 9999;
+            padding: 15px;
+            text-align: center;
+            cursor: move; /* Gợi ý có thể kéo */
+            user-select: none;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .float-tool:active {
+            transform: scale(0.95);
+        }
+
+        .tool-header {
+            font-size: 10px;
+            font-weight: 700;
+            color: #8e8e93;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .prediction-box {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1d1d1f;
+        }
+
+        .percentage {
+            font-size: 12px;
+            color: #34C759; /* iOS Green */
+            font-weight: 600;
+        }
+
+        .btn-predict {
+            background: #007AFF; /* iOS Blue */
+            color: white;
+            border: none;
+            padding: 8px 0;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Chấm xanh trạng thái */
+        .status-dot {
+            height: 6px;
+            width: 6px;
+            background-color: #34C759;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <iframe id="web-container" src="https://play.xoc88.cc/?code=null"></iframe>
+
+    <div class="float-tool" id="draggableTool">
+        <div class="tool-header">
+            <span class="status-dot"></span> LIVE PREDICT
+        </div>
+        
+        <div class="prediction-box">
+            <div class="result-text" id="kq">--</div>
+            <div class="percentage" id="tile">Đang chờ...</div>
+        </div>
+
+        <button class="btn-predict" onclick="getPrediction()">PHÂN TÍCH</button>
+    </div>
+
+    <script>
+        // Logic dự đoán giả lập
+        function getPrediction() {
+            const btn = document.querySelector('.btn-predict');
+            const kqText = document.getElementById('kq');
+            const tileText = document.getElementById('tile');
+
+            btn.disabled = true;
+            btn.innerText = "Đang quét...";
+            kqText.innerText = "⏳";
+
+            setTimeout(() => {
+                const results = ["TÀI", "XỈU"];
+                const randomRes = results[Math.floor(Math.random() * results.length)];
+                const randomRate = Math.floor(Math.random() * (95 - 75 + 1)) + 75;
+
+                kqText.innerText = randomRes;
+                kqText.style.color = randomRes === "TÀI" ? "#FF3B30" : "#007AFF";
+                tileText.innerText = "Tỉ lệ: " + randomRate + "%";
+                
+                btn.disabled = false;
+                btn.innerText = "PHÂN TÍCH";
+            }, 1500);
+        }
+
+        // Làm cho tool có thể kéo thả (Cơ bản)
+        const tool = document.getElementById('draggableTool');
+        let isDragging = false;
+
+        tool.onmousedown = function(e) {
+            isDragging = true;
+            let shiftX = e.clientX - tool.getBoundingClientRect().left;
+            let shiftY = e.clientY - tool.getBoundingClientRect().top;
+
+            document.onmousemove = function(e) {
+                if(!isDragging) return;
+                tool.style.left = e.clientX - shiftX + 'px';
+                tool.style.top = e.clientY - shiftY + 'px';
+                tool.style.bottom = 'auto';
+                tool.style.right = 'auto';
+            };
+
+            document.onmouseup = function() {
+                isDragging = false;
+                document.onmousemove = null;
+            };
+        };
+
+        tool.ondragstart = function() { return false; };
+    </script>
+
+</body>
+</html>
