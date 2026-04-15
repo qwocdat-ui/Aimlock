@@ -2,561 +2,181 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <title>TOOL DỰ ĐOÁN · TERMINAL ACCESS</title>
-    <meta name="description" content="Tool dự đoán nhà cái chính xác nhất. Hỗ trợ người chơi đưa ra quyết định thông minh.">
-    <meta name="robots" content="index, follow">
-    
-    <meta property="og:title" content="Tool Dự Đoán · Hệ Thống Terminal">
-    <meta property="og:description" content="📊 Tool dự đoán nhà cái uy tín - Giao diện terminal tối giản, bảo mật cao.">
-    <meta property="og:image" content="https://i.postimg.cc/3xFqry5f/Gemini-Generated-Image-7n1d4m7n1d4m7n1d.png">
-    <meta property="og:type" content="website">
-    
-    <link rel="icon" type="image/png" href="https://i.postimg.cc/3xFqry5f/Gemini-Generated-Image-7n1d4m7n1d4m7n1d.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS 26.4 Predict Pro - Wallet</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+        :root {
+            --ios-bg: #f2f2f7;
+            --card-glass: rgba(255, 255, 255, 0.8);
+            --ios-blue: #007AFF;
+            --ios-green: #34C759;
         }
 
         body {
-            background: radial-gradient(circle at 20% 30%, #0a0c12, #030507);
-            font-family: 'Fira Code', 'Inter', monospace;
-            color: #c0e0ff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* scanline effect nhẹ */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.02) 0px, rgba(0, 255, 255, 0.02) 2px, transparent 2px, transparent 6px);
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        /* glitch overlay nhẹ */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 20, 40, 0.2);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* terminal container chính */
-        .terminal {
-            max-width: 620px;
-            width: 100%;
-            background: rgba(8, 12, 18, 0.85);
-            backdrop-filter: blur(10px);
-            border-radius: 28px;
-            border: 1px solid rgba(0, 255, 255, 0.25);
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 255, 255, 0.1) inset, 0 0 20px rgba(0, 255, 255, 0.1);
-            padding: 2rem 2rem 2.5rem;
-            transition: all 0.2s ease;
-            position: relative;
-            z-index: 10;
-            animation: fadeInTerminal 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-
-        @keyframes fadeInTerminal {
-            0% {
-                opacity: 0;
-                transform: translateY(20px) scale(0.98);
-                filter: blur(2px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-                filter: blur(0);
-            }
-        }
-
-        /* header terminal style */
-        .terminal-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1.5px solid rgba(0, 255, 255, 0.35);
-            padding-bottom: 1rem;
-            margin-bottom: 1.8rem;
-            flex-wrap: wrap;
-        }
-
-        .terminal-dots {
-            display: flex;
-            gap: 8px;
-        }
-        .dot {
-            width: 13px;
-            height: 13px;
-            border-radius: 50%;
-            background: #2e3b3e;
-            transition: 0.2s;
-        }
-        .dot.red { background: #ff5f56; box-shadow: 0 0 4px #ff5f56; }
-        .dot.yellow { background: #ffbd2e; box-shadow: 0 0 4px #ffbd2e; }
-        .dot.green { background: #27c93f; box-shadow: 0 0 4px #27c93f; }
-
-        .terminal-title {
-            font-family: 'Fira Code', monospace;
-            font-weight: 500;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            background: rgba(0, 255, 255, 0.1);
-            padding: 5px 14px;
-            border-radius: 40px;
-            border: 0.5px solid rgba(0, 255, 255, 0.4);
-            color: #8dd0ff;
-        }
-
-        .terminal-status {
-            margin-left: auto;
-            font-size: 0.7rem;
-            font-family: monospace;
-            color: #6cffb0;
-            background: #0e1a1f;
-            padding: 4px 12px;
-            border-radius: 30px;
-            border: 0.5px solid #2aff9e40;
-        }
-
-        /* logo area - matrix-ish */
-        .logo-matrix {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .crt-logo {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            background: #03080c;
-            border-radius: 28px;
-            padding: 8px 20px;
-            border: 1px solid #0ff2;
-            box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
-        }
-        .logo-matrix img {
-            max-width: 85px;
-            filter: drop-shadow(0 0 6px cyan) brightness(1.1);
-            transition: 0.3s;
-        }
-        .logo-matrix h1 {
-            font-size: 1.7rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #b3f0ff, #4df0ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-            margin-top: 12px;
-            text-shadow: 0 0 5px rgba(0,255,255,0.3);
-        }
-        .tagline {
-            font-size: 0.8rem;
-            font-family: monospace;
-            color: #8ba0bc;
-            background: #0c111bb3;
-            display: inline-block;
-            padding: 5px 14px;
-            border-radius: 50px;
-            margin-top: 10px;
-            border-left: 3px solid #0ff;
-        }
-
-        /* terminal form */
-        .terminal-form {
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto;
+            background: var(--ios-bg);
+            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
-        }
-
-        .submit-btn {
-            background: linear-gradient(95deg, #0b1a1f, #051016);
-            border: 1.5px solid #2affc0;
-            color: #b4ffff;
-            padding: 16px;
-            border-radius: 60px;
-            font-weight: 700;
-            font-family: 'Fira Code', monospace;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.25s;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.4);
-            backdrop-filter: blur(5px);
-            margin-top: 10px;
-        }
-        .submit-btn:hover {
-            background: #0c2027;
-            border-color: #6effe0;
-            color: #ffffff;
-            box-shadow: 0 0 12px rgba(0, 255, 200, 0.4);
-            transform: translateY(-2px);
-        }
-        .submit-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* action links nhưng giữ phong cách terminal */
-        .cmd-links {
-            display: flex;
-            justify-content: center;
-            gap: 18px;
-            margin-top: 28px;
-            flex-wrap: wrap;
-        }
-        .cmd-btn {
-            background: rgba(0, 20, 30, 0.7);
-            backdrop-filter: blur(6px);
-            border: 1px solid #2a6b7a;
-            padding: 10px 22px;
-            border-radius: 40px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #b5ecff;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
             align-items: center;
-            gap: 8px;
-        }
-        .cmd-btn:hover {
-            background: #0f2f38;
-            border-color: #0ff;
-            color: white;
-            box-shadow: 0 0 8px #0ff4;
         }
 
-        /* MODAL TERMINAL STYLE (Telegram & Payment) */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Fira Code', monospace;
-        }
-        .modal-overlay.active {
-            display: flex;
-            animation: fadeIn 0.25s ease;
-        }
-        .modal-terminal {
-            background: #0b1018e6;
-            backdrop-filter: blur(14px);
-            border: 1px solid #2affc080;
-            border-radius: 36px;
-            max-width: 500px;
+        /* Thanh Ví Tiền iOS Style */
+        .wallet-bar {
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             width: 90%;
-            padding: 2rem;
-            box-shadow: 0 30px 40px rgba(0,0,0,0.6), 0 0 0 1px #0ff2 inset;
-            position: relative;
-            animation: scaleModal 0.2s ease;
-        }
-        @keyframes scaleModal {
-            from { transform: scale(0.94); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 24px;
-            font-size: 28px;
-            color: #9ffff0;
-            cursor: pointer;
-            transition: 0.2s;
-            line-height: 1;
-        }
-        .modal-close:hover {
-            color: #ff5f6e;
-            transform: rotate(90deg);
-        }
-        .modal-header {
-            text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 1px dashed #2affb0;
-            padding-bottom: 12px;
-        }
-        .modal-header h2 {
-            font-size: 1.7rem;
-            color: #bef2ff;
-            font-weight: 600;
-        }
-        .bot-link {
-            background: #07161e;
-            padding: 15px;
-            border-radius: 60px;
-            text-align: center;
-            margin: 20px 0;
-            border: 1px solid #0ff5;
-        }
-        .bot-link a {
-            color: #6effe0;
-            font-size: 1rem;
-            font-weight: 500;
-            text-decoration: none;
-            font-family: monospace;
-            word-break: break-all;
-        }
-        .command-block {
-            background: #03080f;
-            padding: 1rem;
-            border-radius: 24px;
-            margin: 15px 0;
-        }
-        .cmd-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: #07131c;
-            padding: 12px 18px;
-            border-radius: 60px;
-            margin: 12px 0;
-            flex-wrap: wrap;
-        }
-        .cmd-item code {
-            background: #000000aa;
-            padding: 5px 14px;
-            border-radius: 30px;
-            color: #0ff;
-            font-weight: bold;
-            border: 0.5px solid #0ff;
-        }
-        .support {
-            margin-top: 20px;
-            text-align: center;
-            background: #0a1b1f;
-            border-radius: 32px;
-            padding: 12px;
-        }
-        .open-bot-button {
-            display: block;
-            text-align: center;
-            background: #0a2a2f;
-            padding: 14px;
-            border-radius: 60px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            margin-top: 20px;
-            border: 1px solid cyan;
-            transition: 0.2s;
-        }
-        .open-bot-button:hover {
-            background: #0f3e46;
-            box-shadow: 0 0 12px cyan;
-        }
-
-        /* card payment styling inside modal */
-        .card-types-mini {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .card-chip {
-            background: #0b1820;
+            max-width: 500px;
+            padding: 15px 25px;
             border-radius: 20px;
-            padding: 8px 14px;
-            text-align: center;
-        }
-        .ins-code {
-            background: #010a0e;
-            padding: 15px;
-            border-radius: 28px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            border-left: 4px solid #0ff;
-        }
-        .telegram-contact {
-            background: #071219;
-            border-radius: 28px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-        .telegram-link-btn {
-            background: #0ff2;
             display: flex;
-            justify-content: center;
-            gap: 8px;
+            justify-content: space-between;
             align-items: center;
-            padding: 12px;
-            border-radius: 60px;
-            text-decoration: none;
-            color: #adf0ff;
-            font-weight: bold;
-            margin-top: 14px;
-            border: 0.5px solid cyan;
-        }
-        hr {
-            border-color: #0ff3;
-            margin: 12px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .balance-info h4 { margin: 0; color: #8e8e93; font-size: 12px; text-transform: uppercase; }
+        .balance-amount { font-size: 24px; font-weight: 700; color: #1c1c1e; }
+
+        .add-money-btn {
+            background: var(--ios-green);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
         }
-        @media (max-width: 520px) {
-            .terminal { padding: 1.5rem; }
-            .logo-matrix h1 { font-size: 1.3rem; }
-            .cmd-btn { padding: 6px 16px; font-size: 0.7rem; }
+
+        .add-money-btn:active { transform: scale(0.9); }
+
+        /* Giao diện Gói (Grid) */
+        .package-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .package-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+        }
+
+        /* Popup Nạp Tiền (Modal) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            width: 80%;
+            max-width: 350px;
+            text-align: center;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #f9f9f9;
+        }
+
+        .confirm-btn {
+            background: var(--ios-blue);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 15px;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-<div class="terminal">
-    <div class="terminal-header">
-        <div class="terminal-dots">
-            <div class="dot red"></div>
-            <div class="dot yellow"></div>
-            <div class="dot green"></div>
+    <div class="wallet-bar">
+        <div class="balance-info">
+            <h4>Số dư khả dụng</h4>
+            <div class="balance-amount" id="balance">0đ</div>
         </div>
-        <div class="terminal-title">root@tool:~/predictor</div>
-        <div class="terminal-status">● ONLINE v2.4</div>
+        <button class="add-money-btn" onclick="openModal()">+</button>
     </div>
 
-    <div class="logo-matrix">
-        <div class="crt-logo">
-            <img src="https://i.postimg.cc/3xFqry5f/Gemini-Generated-Image-7n1d4m7n1d4m7n1d.png" alt="logo" style="width:70px;">
-        </div>
-        <h1>⟡ DỰ ĐOÁN TERMINAL ⟡</h1>
-        <div class="tagline">$ system --connect --auto</div>
-    </div>
-
-    
-    <form method="POST" action="" class="terminal-form">
-        <button type="submit" name="submit" class="submit-btn">⛁ XÁC NHẬN TRUY CẬP ⛁</button>
-    </form>
-
-    <div class="cmd-links">
-        <button class="cmd-btn" onclick="showTelegramPopup()">📡 BẢNG GIÁ / MUA KEY</button>
-        <button class="cmd-btn" onclick="showCardPayment()">💳 NẠP THẺ CÀO</button>
-    </div>
-</div>
-
-<div id="telegramModal" class="modal-overlay">
-    <div class="modal-terminal">
-        <div class="modal-close" onclick="closeTelegramModal()">✕</div>
-        <div class="modal-header">
-            <h2>🤖 BOT MUA KEY TỰ ĐỘNG</h2>
-            <p style="color:#7bb3c0;">giao dịch 24/7 · tự động cấp key</p>
-        </div>
-        <div class="bot-link">
-            <span>🔗 @muakeytudong_bot</span><br>
-            <a href="https://t.me/muakeytudong_bot" target="_blank">https://t.me/muakeytudong_bot</a>
-        </div>
-        <div class="command-block">
-            <div class="cmd-item">
-                <code>/start</code> <span>⟶ khởi tạo session</span>
-            </div>
-            <div class="cmd-item">
-                <code>/muakey</code> <span>⟶ hiển thị gói & thanh toán</span>
-            </div>
-        </div>
-        <div class="support">
-            🛠️ Hỗ trợ: <a href="https://t.me/Ngtuanhung" target="_blank" style="color:#6effe0;">@Ngtuanhung</a>
-        </div>
-        <a href="https://t.me/muakeytudong_bot" target="_blank" class="open-bot-button">⟫ MỞ BOT TRONG TELEGRAM ⟪</a>
-    </div>
-</div>
-
-<div id="paymentModal" class="modal-overlay">
-    <div class="modal-terminal">
-        <div class="modal-close" onclick="closePaymentModal()">✕</div>
-        <div class="modal-header">
-            <h2>💳 NẠP THẺ CÀO</h2>
-            <p style="font-size: 0.75rem;">Viettel | Mobifone | Vinaphone</p>
-        </div>
-        <div class="card-types-mini">
-            <div class="card-chip">📱 VIETTEL</div>
-            <div class="card-chip">📳 MOBIFONE</div>
-            <div class="card-chip">📞 VINAPHONE</div>
-        </div>
-        <div class="ins-code">
-            <span style="color:#0ff;">CÚ PHÁP GIAO DỊCH:</span><br>
-            <code style="background:#000; padding:6px 12px; display:inline-block; border-radius: 20px;">KEY [GÓI] [SERI] [MÃ THẺ]</code>
-            <div style="margin-top: 12px;">📌 Ví dụ: <span style="background:#091f24; padding:4px 12px; border-radius: 20px;">KEY 7NGAY 123456789 0123456789</span></div>
-        </div>
-        <div class="telegram-contact">
-            <p>📨 Sau khi nạp, gửi tin nhắn theo cú pháp đến admin:</p>
-            <a href="https://t.me/Ngtuanhung" target="_blank" class="telegram-link-btn">
-                📩 @Ngtuanhung (Nhận key tự động)
-            </a>
-            <hr>
-            <p style="font-size:0.7rem; color:#ffa07a;">⚠️ Lưu ý: Giữ lại ảnh chụp hoặc mã thẻ để đối chiếu.</p>
+    <div class="package-container">
+        <div class="package-card">
+            <h3>Gói Premium</h3>
+            <p>Dự đoán chính xác 95%</p>
+            <button class="confirm-btn">Mua ngay</button>
         </div>
     </div>
-</div>
 
-<script>
-    // modal controls
-    const telegramModal = document.getElementById('telegramModal');
-    const paymentModal = document.getElementById('paymentModal');
+    <div class="modal" id="depositModal">
+        <div class="modal-content">
+            <h3>Nạp tiền vào tài khoản</h3>
+            <p style="color: #667; font-size: 14px;">Nhập số tiền bạn muốn cộng thêm</p>
+            <input type="number" id="amountInput" placeholder="VD: 500000">
+            <button class="confirm-btn" onclick="addMoney()">Xác nhận nạp</button>
+            <p onclick="closeModal()" style="margin-top: 15px; color: #888; cursor: pointer;">Hủy bỏ</p>
+        </div>
+    </div>
 
-    function showTelegramPopup() {
-        if (telegramModal) telegramModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeTelegramModal() {
-        if (telegramModal) telegramModal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    function showCardPayment() {
-        if (paymentModal) paymentModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closePaymentModal() {
-        if (paymentModal) paymentModal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
+    <script>
+        let currentBalance = 0;
 
-    // close on background click
-    telegramModal?.addEventListener('click', (e) => {
-        if (e.target === telegramModal) closeTelegramModal();
-    });
-    paymentModal?.addEventListener('click', (e) => {
-        if (e.target === paymentModal) closePaymentModal();
-    });
-
-    // ESC key close
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (telegramModal?.classList.contains('active')) closeTelegramModal();
-            if (paymentModal?.classList.contains('active')) closePaymentModal();
+        function openModal() {
+            document.getElementById('depositModal').style.display = 'flex';
         }
-    });
 
-    // Đã xóa phần auto focus input vì thẻ input không còn
-</script>
+        function closeModal() {
+            document.getElementById('depositModal').style.display = 'none';
+        }
+
+        function addMoney() {
+            const amount = document.getElementById('amountInput').value;
+            if (amount > 0) {
+                currentBalance += parseInt(amount);
+                document.getElementById('balance').innerText = currentBalance.toLocaleString('vi-VN') + 'đ';
+                alert('Đã cộng ' + parseInt(amount).toLocaleString('vi-VN') + 'đ thành công!');
+                closeModal();
+                document.getElementById('amountInput').value = '';
+            } else {
+                alert('Vui lòng nhập số tiền hợp lệ!');
+            }
+        }
+    </script>
 </body>
 </html>
