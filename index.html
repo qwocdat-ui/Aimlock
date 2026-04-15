@@ -2,532 +2,561 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IOS HACK CONCEPT v6.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <title>TOOL DỰ ĐOÁN · TERMINAL ACCESS</title>
+    <meta name="description" content="Tool dự đoán nhà cái chính xác nhất. Hỗ trợ người chơi đưa ra quyết định thông minh.">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:title" content="Tool Dự Đoán · Hệ Thống Terminal">
+    <meta property="og:description" content="📊 Tool dự đoán nhà cái uy tín - Giao diện terminal tối giản, bảo mật cao.">
+    <meta property="og:image" content="https://i.postimg.cc/3xFqry5f/Gemini-Generated-Image-7n1d4m7n1d4m7n1d.png">
+    <meta property="og:type" content="website">
+    
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/3xFqry5f/Gemini-Generated-Image-7n1d4m7n1d4m7n1d.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #000000;
-            --card-bg: rgba(15, 15, 15, 0.9);
-            --primary: #ff0000;
-            --glow: 0 0 15px #ff0000, 0 0 30px rgba(255, 0, 0, 0.5);
-            --text: #ffffff;
-            --sub-text: #aaaaaa;
-            --ios-blur: blur(25px);
-            --smooth: cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
             margin: 0;
             padding: 0;
-            outline: none;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: radial-gradient(circle at 20% 30%, #0a0c12, #030507);
+            font-family: 'Fira Code', 'Inter', monospace;
+            color: #c0e0ff;
             min-height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Khung máy giả lập màn hình iOS */
-        .iphone-screen {
-            width: 100%;
-            max-width: 420px;
-            height: 90vh;
-            background: var(--bg);
-            border: 2px solid #1a1a1a;
-            border-radius: 45px;
-            position: relative;
-            box-shadow: 0 0 60px rgba(255, 0, 0, 0.2);
-            overflow: hidden;
             display: flex;
-            flex-direction: column;
-            animation: slideUp 0.8s var(--smooth);
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Viền Neon Đỏ chạy quanh */
-        .iphone-screen::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 45px;
-            border: 2px solid var(--primary);
-            box-shadow: var(--glow);
-            z-index: 10;
-            pointer-events: none;
-            animation: glowPulse 2s infinite;
-        }
-
-        @keyframes glowPulse {
-            0% { opacity: 0.2; }
-            50% { opacity: 0.9; }
-            100% { opacity: 0.2; }
-        }
-
-        /* Header iOS */
-        .status-bar {
-            height: 44px;
-            padding: 0 35px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 12;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        /* Thanh Notch giả lập */
-        .notch {
-            width: 180px;
-            height: 25px;
-            background: #000;
-            border-radius: 0 0 15px 15px;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 13;
-        }
-
-        /* Nội dung chính */
-        .main-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 25px;
-            padding-top: 55px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        h1.app-title {
-            font-size: 28px;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: var(--primary);
-            text-shadow: var(--glow);
-            letter-spacing: 2px;
-            text-align: center;
-        }
-
-        p.welcome {
-            font-size: 12px;
-            color: var(--sub-text);
-            text-align: center;
-            margin-top: -20px;
-            margin-bottom: 10px;
-        }
-
-        /* Các mục lớn (Card) */
-        .section-card {
-            background: var(--card-bg);
-            border: 1px solid #222;
-            border-radius: 25px;
-            padding: 20px;
-            position: relative;
-            transition: border-color 0.4s var(--smooth);
-        }
-
-        .section-card.active {
-            border-color: var(--primary);
-            box-shadow: inset 0 0 15px rgba(255,0,0,0.15);
-        }
-
-        h3.section-title {
-            font-size: 16px;
-            color: #eee;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        /* Mô phỏng Tần số quét (Hz) */
-        .hz-selector {
-            display: flex;
-            gap: 10px;
             justify-content: center;
-        }
-
-        .hz-option {
-            padding: 10px 20px;
-            border-radius: 12px;
-            background: #151515;
-            border: 1px solid #333;
-            color: #ccc;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s var(--smooth);
-        }
-
-        .hz-option.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: var(--glow);
-        }
-
-        .hz-option:active {
-            transform: scale(0.92);
-        }
-
-        /* Mô phỏng Boost phần cứng */
-        .boost-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .boost-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #111;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid #222;
-        }
-
-        .boost-item label { font-size: 13px; color: #aaa; }
-        
-        /* Switch iOS giả lập */
-        .ios-switch {
-            width: 40px;
-            height: 22px;
-            background: #333;
-            border-radius: 15px;
+            padding: 1.5rem;
             position: relative;
-            cursor: pointer;
-            transition: background 0.3s;
+            overflow-x: hidden;
         }
 
-        .ios-switch .thumb {
-            width: 18px;
-            height: 18px;
-            background: #666;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s, background 0.3s;
+        /* scanline effect nhẹ */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.02) 0px, rgba(0, 255, 255, 0.02) 2px, transparent 2px, transparent 6px);
+            pointer-events: none;
+            z-index: 2;
         }
 
-        .ios-switch.on { background: var(--primary); box-shadow: 0 0 10px rgba(255,0,0,0.5); }
-        .ios-switch.on .thumb { transform: translateX(18px); background: #fff; }
-
-        /* Bảng Menu 6 chức năng AIMLOCK chính */
-        .aim-menu {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+        /* glitch overlay nhẹ */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 20, 40, 0.2);
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .feature-item {
+        /* terminal container chính */
+        .terminal {
+            max-width: 620px;
+            width: 100%;
+            background: rgba(8, 12, 18, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 255, 255, 0.1) inset, 0 0 20px rgba(0, 255, 255, 0.1);
+            padding: 2rem 2rem 2.5rem;
+            transition: all 0.2s ease;
+            position: relative;
+            z-index: 10;
+            animation: fadeInTerminal 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeInTerminal {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+                filter: blur(2px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* header terminal style */
+        .terminal-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 18px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 18px;
+            gap: 12px;
+            border-bottom: 1.5px solid rgba(0, 255, 255, 0.35);
+            padding-bottom: 1rem;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 8px;
+        }
+        .dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #2e3b3e;
+            transition: 0.2s;
+        }
+        .dot.red { background: #ff5f56; box-shadow: 0 0 4px #ff5f56; }
+        .dot.yellow { background: #ffbd2e; box-shadow: 0 0 4px #ffbd2e; }
+        .dot.green { background: #27c93f; box-shadow: 0 0 4px #27c93f; }
+
+        .terminal-title {
+            font-family: 'Fira Code', monospace;
+            font-weight: 500;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            background: rgba(0, 255, 255, 0.1);
+            padding: 5px 14px;
+            border-radius: 40px;
+            border: 0.5px solid rgba(0, 255, 255, 0.4);
+            color: #8dd0ff;
+        }
+
+        .terminal-status {
+            margin-left: auto;
+            font-size: 0.7rem;
+            font-family: monospace;
+            color: #6cffb0;
+            background: #0e1a1f;
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: 0.5px solid #2aff9e40;
+        }
+
+        /* logo area - matrix-ish */
+        .logo-matrix {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .crt-logo {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background: #03080c;
+            border-radius: 28px;
+            padding: 8px 20px;
+            border: 1px solid #0ff2;
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
+        }
+        .logo-matrix img {
+            max-width: 85px;
+            filter: drop-shadow(0 0 6px cyan) brightness(1.1);
             transition: 0.3s;
-            cursor: pointer;
+        }
+        .logo-matrix h1 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #b3f0ff, #4df0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-top: 12px;
+            text-shadow: 0 0 5px rgba(0,255,255,0.3);
+        }
+        .tagline {
+            font-size: 0.8rem;
+            font-family: monospace;
+            color: #8ba0bc;
+            background: #0c111bb3;
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 50px;
+            margin-top: 10px;
+            border-left: 3px solid #0ff;
         }
 
-        .feature-item:active { transform: scale(0.95); }
-
-        .feature-item span { font-size: 14px; font-weight: 700; color: #eee; }
-        .feature-item .dot {
-            width: 10px; height: 10px; background: #333; border-radius: 50%; transition: 0.3s;
-        }
-
-        .feature-item.on {
-            border-color: var(--primary);
-            box-shadow: inset 0 0 15px rgba(255,0,0,0.1);
-        }
-        .feature-item.on .dot {
-            background: var(--primary);
-            box-shadow: var(--glow);
-        }
-
-        /* Khu vực Inject và 100 chức năng */
-        .inject-and-list {
+        /* terminal form */
+        .terminal-form {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 24px;
         }
 
-        .inject-box {
-            text-align: center;
-            border: 2px dashed #333;
-            border-radius: 20px;
-            padding: 20px;
-        }
-
-        input[type="file"] { display: none; }
-        .file-label {
-            display: inline-block;
-            background: #111;
-            padding: 10px 20px;
-            border-radius: 12px;
-            color: #888;
-            font-size: 12px;
-            cursor: pointer;
-            border: 1px solid #222;
-        }
-
-        .btn-action {
-            background: linear-gradient(45deg, #cc0000, #ff0000);
-            color: white;
-            border: none;
-            width: 100%;
+        .submit-btn {
+            background: linear-gradient(95deg, #0b1a1f, #051016);
+            border: 1.5px solid #2affc0;
+            color: #b4ffff;
             padding: 16px;
-            border-radius: 16px;
-            font-weight: 900;
-            font-size: 15px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
-            box-shadow: var(--glow);
-            transition: 0.4s;
-            margin-top: 15px;
+            transition: all 0.25s;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            margin-top: 10px;
+        }
+        .submit-btn:hover {
+            background: #0c2027;
+            border-color: #6effe0;
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(0, 255, 200, 0.4);
+            transform: translateY(-2px);
+        }
+        .submit-btn:active {
+            transform: translateY(1px);
         }
 
-        .btn-action:active { transform: scale(0.98); }
-
-        /* Danh sách 100 chức năng */
-        .feature-list-box {
-            height: 200px;
-            overflow-y: auto;
-            border: 1px solid #222;
-            border-radius: 15px;
-            padding: 10px;
+        /* action links nhưng giữ phong cách terminal */
+        .cmd-links {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+        .cmd-btn {
+            background: rgba(0, 20, 30, 0.7);
+            backdrop-filter: blur(6px);
+            border: 1px solid #2a6b7a;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #b5ecff;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cmd-btn:hover {
+            background: #0f2f38;
+            border-color: #0ff;
+            color: white;
+            box-shadow: 0 0 8px #0ff4;
         }
 
-        .feature-list-item {
+        /* MODAL TERMINAL STYLE (Telegram & Payment) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code', monospace;
+        }
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.25s ease;
+        }
+        .modal-terminal {
+            background: #0b1018e6;
+            backdrop-filter: blur(14px);
+            border: 1px solid #2affc080;
+            border-radius: 36px;
+            max-width: 500px;
+            width: 90%;
+            padding: 2rem;
+            box-shadow: 0 30px 40px rgba(0,0,0,0.6), 0 0 0 1px #0ff2 inset;
+            position: relative;
+            animation: scaleModal 0.2s ease;
+        }
+        @keyframes scaleModal {
+            from { transform: scale(0.94); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            font-size: 28px;
+            color: #9ffff0;
+            cursor: pointer;
+            transition: 0.2s;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: #ff5f6e;
+            transform: rotate(90deg);
+        }
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1px dashed #2affb0;
+            padding-bottom: 12px;
+        }
+        .modal-header h2 {
+            font-size: 1.7rem;
+            color: #bef2ff;
+            font-weight: 600;
+        }
+        .bot-link {
+            background: #07161e;
+            padding: 15px;
+            border-radius: 60px;
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #0ff5;
+        }
+        .bot-link a {
+            color: #6effe0;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .command-block {
+            background: #03080f;
+            padding: 1rem;
+            border-radius: 24px;
+            margin: 15px 0;
+        }
+        .cmd-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 11px;
-            color: var(--sub-text);
-            padding: 6px 0;
-            border-bottom: 1px solid #111;
+            gap: 15px;
+            background: #07131c;
+            padding: 12px 18px;
+            border-radius: 60px;
+            margin: 12px 0;
+            flex-wrap: wrap;
         }
-        
-        .feature-list-item input {
-            accent-color: var(--primary);
+        .cmd-item code {
+            background: #000000aa;
+            padding: 5px 14px;
+            border-radius: 30px;
+            color: #0ff;
+            font-weight: bold;
+            border: 0.5px solid #0ff;
+        }
+        .support {
+            margin-top: 20px;
+            text-align: center;
+            background: #0a1b1f;
+            border-radius: 32px;
+            padding: 12px;
+        }
+        .open-bot-button {
+            display: block;
+            text-align: center;
+            background: #0a2a2f;
+            padding: 14px;
+            border-radius: 60px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            margin-top: 20px;
+            border: 1px solid cyan;
+            transition: 0.2s;
+        }
+        .open-bot-button:hover {
+            background: #0f3e46;
+            box-shadow: 0 0 12px cyan;
         }
 
-        /* Bottom Tab */
-        .tab-bar {
-            height: 80px;
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(15px);
+        /* card payment styling inside modal */
+        .card-types-mini {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .card-chip {
+            background: #0b1820;
+            border-radius: 20px;
+            padding: 8px 14px;
+            text-align: center;
+        }
+        .ins-code {
+            background: #010a0e;
+            padding: 15px;
+            border-radius: 28px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            border-left: 4px solid #0ff;
+        }
+        .telegram-contact {
+            background: #071219;
+            border-radius: 28px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .telegram-link-btn {
+            background: #0ff2;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
             align-items: center;
-            border-top: 1px solid #1a1a1a;
-            z-index: 12;
-            margin-top: auto;
+            padding: 12px;
+            border-radius: 60px;
+            text-decoration: none;
+            color: #adf0ff;
+            font-weight: bold;
+            margin-top: 14px;
+            border: 0.5px solid cyan;
+        }
+        hr {
+            border-color: #0ff3;
+            margin: 12px 0;
         }
 
-        .tab-item { font-size: 24px; opacity: 0.3; transition: 0.3s; }
-        .tab-item.active { opacity: 1; color: var(--primary); text-shadow: var(--glow); }
-        
-        /* Hiệu ứng Progress Bar */
-        .progress-container {
-            width: 100%; height: 6px; background: #111; border-radius: 10px; margin-top: 15px; display: none; overflow: hidden;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-
-        #progress-fill { height: 100%; width: 0%; background: var(--primary); box-shadow: var(--glow); }
-
-        /* Tùy chỉnh thanh cuộn iOS style */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        @media (max-width: 520px) {
+            .terminal { padding: 1.5rem; }
+            .logo-matrix h1 { font-size: 1.3rem; }
+            .cmd-btn { padding: 6px 16px; font-size: 0.7rem; }
+        }
     </style>
 </head>
 <body>
 
-<div class="iphone-screen">
-    <div class="notch"></div>
-    <div class="status-bar">
-        <span id="ios-time">09:41</span>
-        <div style="display: flex; gap: 6px;">quocdatdv</div>
+<div class="terminal">
+    <div class="terminal-header">
+        <div class="terminal-dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+        </div>
+        <div class="terminal-title">root@tool:~/predictor</div>
+        <div class="terminal-status">● ONLINE v2.4</div>
     </div>
 
-    <div class="main-container">
-        <h1 class="app-title">ULTRA INJECT</h1>
-        <p class="welcome">Phiên Bản 1.0</p>
-
-        <div class="section-card active">
-            <h3 class="section-title">Hệ thống tối ưu</h3>
-            <div class="hz-selector" style="margin-bottom: 20px;">
-                <div class="hz-option active" onclick="setHz(this, 60)">60 Hz</div>
-                <div class="hz-option" onclick="setHz(this, 90)">90 Hz</div>
-                <div class="hz-option" onclick="setHz(this, 120)">120 Hz</div>
-                <div class="hz-option" onclick="setHz(this, 144)">144 Hz</div>
-            </div>
-            <div class="boost-grid">
-                <div class="boost-item">
-                    <label>CPU Turbo</label>
-                    <div class="ios-switch on" onclick="toggleSwitch(this)"> <div class="thumb"></div> </div>
-                </div>
-                <div class="boost-item">
-                    <label>GPU Boost</label>
-                    <div class="ios-switch on" onclick="toggleSwitch(this)"> <div class="thumb"></div> </div>
-                </div>
-                <div class="boost-item">
-                    <label>RAM Cleaner</label>
-                    <div class="ios-switch" onclick="toggleSwitch(this)"> <div class="thumb"></div> </div>
-                </div>
-                <div class="boost-item">
-                    <label>Bypass Thermals</label>
-                    <div class="ios-switch" onclick="toggleSwitch(this)"> <div class="thumb"></div> </div>
-                </div>
-            </div>
+    <div class="logo-matrix">
+        <div class="crt-logo">
+            <img src="https://i.postimg.cc/3xFqry5f/Gemini-Generated-Image-7n1d4m7n1d4m7n1d.png" alt="logo" style="width:70px;">
         </div>
-
-        <div class="section-card">
-            <h3 class="section-title">Core functions (Menu #1)</h3>
-            <div class="aim-menu">
-                <div class="feature-item" onclick="toggleAim(this)"> <span>AIMLOCK 100%</span> <div class="dot"></div> </div>
-                <div class="feature-item on" onclick="toggleAim(this)"> <span>AUTOHEADSHOT</span> <div class="dot"></div> </div>
-                <div class="feature-item" onclick="toggleAim(this)"> <span>TRACKING AIM</span> <div class="dot"></div> </div>
-                <div class="feature-item" onclick="toggleAim(this)"> <span>ANTENNA v2.0</span> <div class="dot"></div> </div>
-                <div class="feature-item on" onclick="toggleAim(this)"> <span>RECOIL 0%</span> <div class="dot"></div> </div>
-                <div class="feature-item" onclick="toggleAim(this)"> <span>WALLHACK v9.1</span> <div class="dot"></div> </div>
-            </div>
-        </div>
-
-        <div class="section-card">
-            <h3 class="section-title">Advanced hacks (Inject)</h3>
-            <div class="inject-and-list">
-                <div class="inject-box">
-                    <label for="inject-file" class="file-label">Chọn File Config (.lua)</label>
-                    <input type="file" id="inject-file">
-                    <button class="btn-action" onclick="startInject()">ACTIVATE SYSTEM</button>
-                    <div class="progress-container" id="p-container"> <div id="progress-fill"></div> </div>
-                    <div id="status-text" style="font-size: 11px; margin-top: 12px; color: var(--primary); font-weight: bold;"></div>
-                </div>
-
-                <div class="feature-list-box" id="full-feature-list">
-                    </div>
-                <span style="font-size: 10px; color: var(--sub-text); text-align: center;">Và 90+ chức năng khác đang ẩn...</span>
-            </div>
-        </div>
+        <h1>⟡ DỰ ĐOÁN TERMINAL ⟡</h1>
+        <div class="tagline">$ system --connect --auto</div>
     </div>
 
-    <nav class="tab-bar">
-        <div class="tab-item active">💥</div>
-        <div class="tab-item">💎</div>
-        <div class="tab-item">🛡️</div>
-        <div class="tab-item">⚙️</div>
-    </nav>
+    
+    <form method="POST" action="" class="terminal-form">
+        <button type="submit" name="submit" class="submit-btn">⛁ XÁC NHẬN TRUY CẬP ⛁</button>
+    </form>
+
+    <div class="cmd-links">
+        <button class="cmd-btn" onclick="showTelegramPopup()">📡 BẢNG GIÁ / MUA KEY</button>
+        <button class="cmd-btn" onclick="showCardPayment()">💳 NẠP THẺ CÀO</button>
+    </div>
+</div>
+
+<div id="telegramModal" class="modal-overlay">
+    <div class="modal-terminal">
+        <div class="modal-close" onclick="closeTelegramModal()">✕</div>
+        <div class="modal-header">
+            <h2>🤖 BOT MUA KEY TỰ ĐỘNG</h2>
+            <p style="color:#7bb3c0;">giao dịch 24/7 · tự động cấp key</p>
+        </div>
+        <div class="bot-link">
+            <span>🔗 @muakeytudong_bot</span><br>
+            <a href="https://t.me/muakeytudong_bot" target="_blank">https://t.me/muakeytudong_bot</a>
+        </div>
+        <div class="command-block">
+            <div class="cmd-item">
+                <code>/start</code> <span>⟶ khởi tạo session</span>
+            </div>
+            <div class="cmd-item">
+                <code>/muakey</code> <span>⟶ hiển thị gói & thanh toán</span>
+            </div>
+        </div>
+        <div class="support">
+            🛠️ Hỗ trợ: <a href="https://t.me/Ngtuanhung" target="_blank" style="color:#6effe0;">@Ngtuanhung</a>
+        </div>
+        <a href="https://t.me/muakeytudong_bot" target="_blank" class="open-bot-button">⟫ MỞ BOT TRONG TELEGRAM ⟪</a>
+    </div>
+</div>
+
+<div id="paymentModal" class="modal-overlay">
+    <div class="modal-terminal">
+        <div class="modal-close" onclick="closePaymentModal()">✕</div>
+        <div class="modal-header">
+            <h2>💳 NẠP THẺ CÀO</h2>
+            <p style="font-size: 0.75rem;">Viettel | Mobifone | Vinaphone</p>
+        </div>
+        <div class="card-types-mini">
+            <div class="card-chip">📱 VIETTEL</div>
+            <div class="card-chip">📳 MOBIFONE</div>
+            <div class="card-chip">📞 VINAPHONE</div>
+        </div>
+        <div class="ins-code">
+            <span style="color:#0ff;">CÚ PHÁP GIAO DỊCH:</span><br>
+            <code style="background:#000; padding:6px 12px; display:inline-block; border-radius: 20px;">KEY [GÓI] [SERI] [MÃ THẺ]</code>
+            <div style="margin-top: 12px;">📌 Ví dụ: <span style="background:#091f24; padding:4px 12px; border-radius: 20px;">KEY 7NGAY 123456789 0123456789</span></div>
+        </div>
+        <div class="telegram-contact">
+            <p>📨 Sau khi nạp, gửi tin nhắn theo cú pháp đến admin:</p>
+            <a href="https://t.me/Ngtuanhung" target="_blank" class="telegram-link-btn">
+                📩 @Ngtuanhung (Nhận key tự động)
+            </a>
+            <hr>
+            <p style="font-size:0.7rem; color:#ffa07a;">⚠️ Lưu ý: Giữ lại ảnh chụp hoặc mã thẻ để đối chiếu.</p>
+        </div>
+    </div>
 </div>
 
 <script>
-    // Cập nhật giờ iOS
-    function updateTime() {
-        const now = new Date();
-        const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-        document.getElementById('ios-time').innerText = timeStr;
-    }
-    updateTime();
-    setInterval(updateTime, 10000);
+    // modal controls
+    const telegramModal = document.getElementById('telegramModal');
+    const paymentModal = document.getElementById('paymentModal');
 
-    // Hiệu ứng Switch iOS
-    function toggleSwitch(el) {
-        el.classList.toggle('on');
-        hapticFeedback();
+    function showTelegramPopup() {
+        if (telegramModal) telegramModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
-
-    // Chọn tần số quét
-    function setHz(el, hz) {
-        const options = document.querySelectorAll('.hz-option');
-        options.forEach(opt => opt.classList.remove('active'));
-        el.classList.add('active');
-        hapticFeedback(20);
+    function closeTelegramModal() {
+        if (telegramModal) telegramModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function showCardPayment() {
+        if (paymentModal) paymentModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closePaymentModal() {
+        if (paymentModal) paymentModal.classList.remove('active');
+        document.body.style.overflow = '';
     }
 
-    // Hiệu ứng bật tắt chức năng Aim
-    function toggleAim(el) {
-        el.classList.toggle('on');
-        hapticFeedback(15);
-    }
+    // close on background click
+    telegramModal?.addEventListener('click', (e) => {
+        if (e.target === telegramModal) closeTelegramModal();
+    });
+    paymentModal?.addEventListener('click', (e) => {
+        if (e.target === paymentModal) closePaymentModal();
+    });
 
-    // Giả lập Haptic Feedback (rung nhẹ)
-    function hapticFeedback(ms = 10) {
-        if (navigator.vibrate) navigator.vibrate(ms);
-    }
-
-    // Giả lập nạp 100 chức năng
-    function generateFeatures() {
-        const list = document.getElementById('full-feature-list');
-        const hackNames = ["ESP Box", "Wallhack", "Fly Hack", "God Mode", "Speed Run", "Teleport", "Invisible", "Ghost v9", "Chams Color", "Damage Boost", "No Spread", "Fast Reload", "No Grass", "Wireframe", "Esp Skeleton", "Bypass Ban v11"];
-        for (let i = 1; i <= 100; i++) {
-            const nameIdx = Math.floor(Math.random() * hackNames.length);
-            const name = hackNames[nameIdx] + " (v" + (Math.random()*10).toFixed(1) + ")";
-            const itemHTML = `
-                <div class="feature-list-item">
-                    <input type="checkbox" id="hack_${i}">
-                    <label for="hack_${i}">[#${i.toString().padStart(3, '0')}] ${name}</label>
-                </div>`;
-            list.insertAdjacentHTML('beforeend', itemHTML);
+    // ESC key close
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (telegramModal?.classList.contains('active')) closeTelegramModal();
+            if (paymentModal?.classList.contains('active')) closePaymentModal();
         }
-    }
-    generateFeatures();
+    });
 
-    // Giả lập quá trình Inject file
-    function startInject() {
-        const btn = document.querySelector('.btn-action');
-        const container = document.getElementById('p-container');
-        const fill = document.getElementById('progress-fill');
-        const status = document.getElementById('status-text');
-        
-        btn.style.display = "none";
-        container.style.display = "block";
-        
-        let width = 0;
-        const logs = [
-            "> Starting...",
-            "> Bypassing Cerberus...",
-            "> Patching Mem (0x4a)...",
-            "> Loading Lua v5.4...",
-            "> Aimlock Active!",
-            "> Enjoy!"
-        ];
-
-        const interval = setInterval(() => {
-            if (width >= 100) {
-                clearInterval(interval);
-                status.innerText = "SUCCESSFULLY ACTIVATED!";
-                hapticFeedback(100);
-                setTimeout(() => {
-                    alert("Kích hoạt thành công! Hãy vào Game ngay.");
-                    location.reload();
-                }, 800);
-            } else {
-                width += Math.random() * 5;
-                if (width > 100) width = 100;
-                fill.style.width = width + "%";
-                let logIdx = Math.floor((width / 100) * logs.length);
-                if(logs[logIdx]) status.innerText = logs[logIdx];
-            }
-        }, 90);
-    }
+    // Đã xóa phần auto focus input vì thẻ input không còn
 </script>
-
 </body>
 </html>
