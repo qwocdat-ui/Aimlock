@@ -3,164 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Dự Đoán iOS 26.4</title>
+    <title>iOS 26.4 - Data Decryptor</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+        :root {
+            --ios-blue: #0A84FF;
+            --ios-red: #FF453A;
+            --glass: rgba(15, 15, 15, 0.95);
         }
 
-        /* Khung hiển thị trang web mục tiêu */
-        #web-container {
-            width: 100%;
-            height: 100%;
-            border: none;
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Courier New', Courier, monospace; }
+
+        #target-web { width: 100%; height: 100%; border: none; filter: brightness(0.5); transition: 0.5s; }
+
+        /* Khung quét */
+        #scanner-overlay {
+            position: fixed; top: 25%; left: 50%; transform: translateX(-50%);
+            width: 280px; height: 120px; border: 1px solid var(--ios-blue);
+            display: none; z-index: 5;
+        }
+        .scan-line { width: 100%; height: 2px; background: var(--ios-blue); position: absolute; box-shadow: 0 0 15px var(--ios-blue); animation: scan 1.5s infinite; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* Bảng điều khiển iOS */
+        #control-panel {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 340px; background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 30px; padding: 20px; border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; z-index: 10; font-family: -apple-system, sans-serif;
         }
 
-        /* Tool nổi phong cách iOS */
-        .float-tool {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 160px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            border: 0.5px solid rgba(255, 255, 255, 0.4);
-            z-index: 9999;
-            padding: 15px;
-            text-align: center;
-            cursor: move; /* Gợi ý có thể kéo */
-            user-select: none;
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Console Log - Nơi dữ liệu nhảy */
+        #console-data {
+            background: rgba(0,0,0,0.5); border-radius: 15px; padding: 10px;
+            height: 60px; overflow: hidden; font-family: monospace;
+            font-size: 9px; color: #32D74B; margin-bottom: 10px; line-height: 1.2;
         }
 
-        .float-tool:active {
-            transform: scale(0.95);
-        }
+        .result-box { text-align: center; margin-bottom: 15px; }
+        #res-val { font-size: 40px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
 
-        .tool-header {
-            font-size: 10px;
-            font-weight: 700;
-            color: #8e8e93;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-
-        .prediction-box {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
-        .result-text {
-            font-size: 20px;
-            font-weight: 800;
-            color: #1d1d1f;
-        }
-
-        .percentage {
-            font-size: 12px;
-            color: #34C759; /* iOS Green */
-            font-weight: 600;
-        }
-
-        .btn-predict {
-            background: #007AFF; /* iOS Blue */
-            color: white;
-            border: none;
-            padding: 8px 0;
-            width: 100%;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* Chấm xanh trạng thái */
-        .status-dot {
-            height: 6px;
-            width: 6px;
-            background-color: #34C759;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 4px;
+        .btn-action {
+            background: #fff; color: #000; border: none; width: 100%;
+            padding: 14px; border-radius: 18px; font-weight: bold; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <iframe id="web-container" src="https://play.xoc88.cc/?code=null"></iframe>
+    <iframe id="target-web" src="https://bing.com"></iframe>
 
-    <div class="float-tool" id="draggableTool">
-        <div class="tool-header">
-            <span class="status-dot"></span> LIVE PREDICT
-        </div>
+    <div id="scanner-overlay"><div class="scan-line"></div></div>
+
+    <div id="control-panel">
+        <div style="font-size: 10px; color: #8e8e93; margin-bottom: 8px;">AI DECRYPTOR v26.4</div>
         
-        <div class="prediction-box">
-            <div class="result-text" id="kq">--</div>
-            <div class="percentage" id="tile">Đang chờ...</div>
+        <div id="console-data">
+            SYSTEM READY...<br>
+            AWAITING COMMAND...
         </div>
 
-        <button class="btn-predict" onclick="getPrediction()">PHÂN TÍCH</button>
+        <div class="result-box">
+            <div id="res-val">READY</div>
+        </div>
+
+        <button class="btn-action" onclick="runHack()">BẮT ĐẦU QUÉT</button>
     </div>
 
     <script>
-        // Logic dự đoán giả lập
-        function getPrediction() {
-            const btn = document.querySelector('.btn-predict');
-            const kqText = document.getElementById('kq');
-            const tileText = document.getElementById('tile');
+        const logs = [
+            "> Initializing pixel recognition...",
+            "> Accessing iframe layer data...",
+            "> Extracting MD5 hash string...",
+            "> Comparing session history...",
+            "> Analyzing bounce rate...",
+            "> Calculation successful (98.4ms)",
+            "> Finalizing prediction..."
+        ];
 
+        function runHack() {
+            const consoleBox = document.getElementById('console-data');
+            const resVal = document.getElementById('res-val');
+            const scanner = document.getElementById('scanner-overlay');
+            const web = document.getElementById('target-web');
+            const btn = document.querySelector('.btn-action');
+
+            // Reset & Bắt đầu
             btn.disabled = true;
-            btn.innerText = "Đang quét...";
-            kqText.innerText = "⏳";
+            scanner.style.display = 'block';
+            web.style.filter = "brightness(0.3) blur(2px)";
+            resVal.innerText = "WAIT";
+            resVal.style.color = "#fff";
+            consoleBox.innerHTML = "";
 
-            setTimeout(() => {
-                const results = ["TÀI", "XỈU"];
-                const randomRes = results[Math.floor(Math.random() * results.length)];
-                const randomRate = Math.floor(Math.random() * (95 - 75 + 1)) + 75;
+            // Hiệu ứng chữ chạy (Console)
+            let i = 0;
+            const logInterval = setInterval(() => {
+                if (i < logs.length) {
+                    consoleBox.innerHTML += logs[i] + "<br>";
+                    consoleBox.scrollTop = consoleBox.scrollHeight;
+                    i++;
+                } else {
+                    clearInterval(logInterval);
+                    finishHack();
+                }
+            }, 400);
 
-                kqText.innerText = randomRes;
-                kqText.style.color = randomRes === "TÀI" ? "#FF3B30" : "#007AFF";
-                tileText.innerText = "Tỉ lệ: " + randomRate + "%";
+            function finishHack() {
+                scanner.style.display = 'none';
+                web.style.filter = "brightness(0.5)";
+                
+                const isTai = Math.random() > 0.5;
+                resVal.innerText = isTai ? "TÀI" : "XỈU";
+                resVal.style.color = isTai ? "var(--ios-red)" : "var(--ios-blue)";
                 
                 btn.disabled = false;
-                btn.innerText = "PHÂN TÍCH";
-            }, 1500);
+                btn.innerText = "QUÉT TIẾP PHIÊN MỚI";
+            }
         }
-
-        // Làm cho tool có thể kéo thả (Cơ bản)
-        const tool = document.getElementById('draggableTool');
-        let isDragging = false;
-
-        tool.onmousedown = function(e) {
-            isDragging = true;
-            let shiftX = e.clientX - tool.getBoundingClientRect().left;
-            let shiftY = e.clientY - tool.getBoundingClientRect().top;
-
-            document.onmousemove = function(e) {
-                if(!isDragging) return;
-                tool.style.left = e.clientX - shiftX + 'px';
-                tool.style.top = e.clientY - shiftY + 'px';
-                tool.style.bottom = 'auto';
-                tool.style.right = 'auto';
-            };
-
-            document.onmouseup = function() {
-                isDragging = false;
-                document.onmousemove = null;
-            };
-        };
-
-        tool.ondragstart = function() { return false; };
     </script>
-
 </body>
 </html>
