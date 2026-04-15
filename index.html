@@ -3,178 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iOS 26.4 Predict Pro - Wallet</title>
+    <title>iOS 26.4 - Mua Gói Dự Đoán</title>
     <style>
         :root {
-            --ios-bg: #f2f2f7;
-            --card-glass: rgba(255, 255, 255, 0.8);
-            --ios-blue: #007AFF;
-            --ios-green: #34C759;
+            --ios-bg: #000000;
+            --ios-card: #1c1c1e;
+            --ios-blue: #0A84FF;
+            --ios-green: #32D74B;
+            --ios-red: #FF453A;
         }
 
         body {
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto;
-            background: var(--ios-bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+            background-color: var(--ios-bg);
+            color: white;
             margin: 0;
-            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding-top: 50px;
         }
 
-        /* Thanh Ví Tiền iOS Style */
-        .wallet-bar {
-            background: var(--card-glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            width: 90%;
-            max-width: 500px;
+        /* Ví tiền phong cách Dynamic Island */
+        .wallet-island {
+            background: var(--ios-card);
             padding: 15px 25px;
-            border-radius: 20px;
+            border-radius: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-            position: sticky;
-            top: 20px;
-            z-index: 100;
+            width: 320px;
+            border: 1px solid #333;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .balance-info h4 { margin: 0; color: #8e8e93; font-size: 12px; text-transform: uppercase; }
-        .balance-amount { font-size: 24px; font-weight: 700; color: #1c1c1e; }
+        .balance-label { font-size: 12px; color: #8e8e93; }
+        .balance-value { font-size: 22px; font-weight: 600; }
 
-        .add-money-btn {
+        /* Nút nạp tiền nhanh */
+        .btn-add {
             background: var(--ios-green);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
+            border: none; color: white;
+            padding: 8px 15px; border-radius: 15px;
+            font-weight: bold; cursor: pointer;
         }
 
-        .add-money-btn:active { transform: scale(0.9); }
-
-        /* Giao diện Gói (Grid) */
-        .package-container {
+        /* Danh sách 4 gói */
+        .package-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1000px;
-        }
-
-        .package-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-        }
-
-        /* Popup Nạp Tiền (Modal) */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(5px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 30px;
-            width: 80%;
-            max-width: 350px;
-            text-align: center;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        input {
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             width: 90%;
-            padding: 12px;
-            margin: 15px 0;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 16px;
-            background: #f9f9f9;
+            max-width: 400px;
         }
 
-        .confirm-btn {
-            background: var(--ios-blue);
-            color: white;
+        .card {
+            background: var(--ios-card);
+            padding: 20px;
+            border-radius: 25px;
+            text-align: center;
+            border: 1px solid #2c2c2e;
+        }
+
+        .card h3 { margin: 10px 0; font-size: 16px; }
+        .card .price { color: var(--ios-blue); font-weight: bold; margin-bottom: 15px; }
+
+        .btn-buy {
+            background: white;
+            color: black;
             border: none;
-            padding: 12px 30px;
+            padding: 10px 0;
+            width: 100%;
             border-radius: 15px;
             font-weight: 600;
-            width: 100%;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .btn-buy:active { opacity: 0.7; }
+
+        /* Modal nạp tiền */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; 
+            width: 100%; height: 100%; background: rgba(0,0,0,0.8);
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-box {
+            background: #2c2c2e; padding: 25px; border-radius: 25px;
+            width: 280px; text-align: center;
+        }
+        input {
+            width: 100%; padding: 12px; margin: 15px 0;
+            border-radius: 10px; border: none; background: #3a3a3c; color: white;
+            text-align: center; font-size: 18px;
         }
     </style>
 </head>
 <body>
 
-    <div class="wallet-bar">
-        <div class="balance-info">
-            <h4>Số dư khả dụng</h4>
-            <div class="balance-amount" id="balance">0đ</div>
+    <div class="wallet-island">
+        <div>
+            <div class="balance-label">SỐ DƯ CỦA BẠN</div>
+            <div class="balance-value" id="moneyDisplay">0đ</div>
         </div>
-        <button class="add-money-btn" onclick="openModal()">+</button>
+        <button class="btn-add" onclick="toggleModal(true)">NẠP</button>
     </div>
 
-    <div class="package-container">
-        <div class="package-card">
-            <h3>Gói Premium</h3>
-            <p>Dự đoán chính xác 95%</p>
-            <button class="confirm-btn">Mua ngay</button>
+    <div class="package-grid">
+        <div class="card">
+            <h3>Gói VIP 1</h3>
+            <div class="price">50.000đ</div>
+            <button class="btn-buy" onclick="handlePurchase('Gói VIP 1')">Mua Ngay</button>
+        </div>
+        <div class="card">
+            <h3>Gói VIP 2</h3>
+            <div class="price">50.000đ</div>
+            <button class="btn-buy" onclick="handlePurchase('Gói VIP 2')">Mua Ngay</button>
+        </div>
+        <div class="card">
+            <h3>Gói VIP 3</h3>
+            <div class="price">50.000đ</div>
+            <button class="btn-buy" onclick="handlePurchase('Gói VIP 3')">Mua Ngay</button>
+        </div>
+        <div class="card">
+            <h3>Gói VIP 4</h3>
+            <div class="price">50.000đ</div>
+            <button class="btn-buy" onclick="handlePurchase('Gói VIP 4')">Mua Ngay</button>
         </div>
     </div>
 
-    <div class="modal" id="depositModal">
-        <div class="modal-content">
-            <h3>Nạp tiền vào tài khoản</h3>
-            <p style="color: #667; font-size: 14px;">Nhập số tiền bạn muốn cộng thêm</p>
-            <input type="number" id="amountInput" placeholder="VD: 500000">
-            <button class="confirm-btn" onclick="addMoney()">Xác nhận nạp</button>
-            <p onclick="closeModal()" style="margin-top: 15px; color: #888; cursor: pointer;">Hủy bỏ</p>
+    <div class="modal" id="modalNap">
+        <div class="modal-box">
+            <h3>Nạp Tiền</h3>
+            <input type="number" id="inputNap" placeholder="Nhập số tiền">
+            <button class="btn-buy" style="background: var(--ios-green); color: white;" onclick="processDeposit()">Xác Nhận</button>
+            <p style="color: #8e8e93; cursor: pointer; margin-top: 15px;" onclick="toggleModal(false)">Đóng</p>
         </div>
     </div>
 
     <script>
-        let currentBalance = 0;
+        let balance = 0;
+        const PACKAGE_PRICE = 50000;
 
-        function openModal() {
-            document.getElementById('depositModal').style.display = 'flex';
+        function toggleModal(show) {
+            document.getElementById('modalNap').style.display = show ? 'flex' : 'none';
         }
 
-        function closeModal() {
-            document.getElementById('depositModal').style.display = 'none';
-        }
-
-        function addMoney() {
-            const amount = document.getElementById('amountInput').value;
+        function processDeposit() {
+            let amount = document.getElementById('inputNap').value;
             if (amount > 0) {
-                currentBalance += parseInt(amount);
-                document.getElementById('balance').innerText = currentBalance.toLocaleString('vi-VN') + 'đ';
-                alert('Đã cộng ' + parseInt(amount).toLocaleString('vi-VN') + 'đ thành công!');
-                closeModal();
-                document.getElementById('amountInput').value = '';
+                balance += parseInt(amount);
+                updateUI();
+                toggleModal(false);
+                document.getElementById('inputNap').value = '';
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('moneyDisplay').innerText = balance.toLocaleString('vi-VN') + 'đ';
+        }
+
+        function handlePurchase(packageName) {
+            if (balance >= PACKAGE_PRICE) {
+                balance -= PACKAGE_PRICE;
+                updateUI();
+                alert('Thanh toán thành công ' + packageName + '! Đang chuyển hướng...');
+                
+                // Chuyển sang trang float.html sau 1 giây
+                setTimeout(() => {
+                    window.location.href = 'float.html';
+                }, 1000);
             } else {
-                alert('Vui lòng nhập số tiền hợp lệ!');
+                alert('Số dư không đủ! Bạn cần ít nhất 50.000đ');
             }
         }
     </script>
