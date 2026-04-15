@@ -3,158 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iOS 26.4 - Ghost Interface</title>
+    <title>Ghost Analyzer MD5 Sync</title>
     <style>
         :root {
             --ios-blue: #0A84FF;
             --ios-red: #FF453A;
-            --glass: rgba(15, 15, 15, 0.9);
+            --glass: rgba(20, 20, 20, 0.95);
         }
 
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, sans-serif; }
+        #target-web { width: 100%; height: 100%; border: none; }
 
-        #target-web { width: 100%; height: 100%; border: none; transition: 0.5s; }
-
-        /* RADAR QUÉT TOÀN MÀN HÌNH */
-        #full-scan {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, transparent, rgba(10, 132, 255, 0.1), transparent);
-            border-top: 2px solid var(--ios-blue);
-            z-index: 5; display: none; pointer-events: none;
-            animation: radar 2s infinite ease-in-out;
-        }
-        @keyframes radar { 0% { top: -100%; } 100% { top: 100%; } }
-
-        /* BONG BÓNG THU NHỎ (BUBBLE) */
-        #tool-bubble {
-            position: fixed; top: 100px; right: 20px;
-            width: 60px; height: 60px; background: var(--ios-blue);
-            border-radius: 50%; display: none; z-index: 1000;
-            box-shadow: 0 0 20px rgba(10, 132, 255, 0.6);
-            cursor: move; justify-content: center; align-items: center;
-            border: 2px solid white;
+        /* Hiệu ứng quét toàn màn hình */
+        #scanner-line {
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--ios-blue); box-shadow: 0 0 20px var(--ios-blue);
+            z-index: 999; display: none; pointer-events: none;
         }
 
-        /* BẢNG ĐIỀU KHIỂN CHÍNH */
+        /* Bảng điều khiển */
         #main-tool {
-            position: fixed; top: 50px; right: 20px;
-            width: 260px; background: var(--glass); backdrop-filter: blur(25px);
-            border-radius: 30px; padding: 20px; border: 1px solid rgba(255,255,255,0.15);
-            color: white; z-index: 1000; cursor: move; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            position: fixed; top: 20px; right: 20px;
+            width: 280px; background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 30px; padding: 20px; border: 1px solid rgba(255,255,255,0.1);
+            color: white; z-index: 1000; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .dot { width: 8px; height: 8px; background: #32D74B; border-radius: 50%; display: inline-block; margin-right: 5px; }
-
-        #console {
-            background: rgba(0,0,0,0.4); border-radius: 12px; padding: 10px;
-            height: 50px; font-family: monospace; font-size: 10px; color: #32D74B;
-            overflow: hidden; margin-bottom: 10px;
-        }
-
-        .res-val { font-size: 45px; font-weight: 900; text-align: center; margin: 10px 0; letter-spacing: 3px; }
+        .status-bar { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 10px; color: #32D74B; }
         
+        #console {
+            background: #000; border-radius: 15px; padding: 10px;
+            height: 70px; font-family: monospace; font-size: 10px; color: #32D74B;
+            overflow: hidden; margin-bottom: 15px; border: 1px solid #333;
+        }
+
+        .display-area { text-align: center; padding: 10px 0; border-top: 1px solid #333; }
+        #res-val { font-size: 48px; font-weight: 900; letter-spacing: 2px; }
+        
+        /* Progress bar đồng bộ thời gian */
+        .timer-track { width: 100%; height: 6px; background: #333; border-radius: 3px; margin: 15px 0; overflow: hidden; }
+        #timer-bar { width: 100%; height: 100%; background: var(--ios-blue); transition: width 1s linear; }
+
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn { border: none; padding: 10px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .btn-hide { background: #3a3a3c; color: white; }
-        .btn-scan { background: white; color: black; }
+        .btn { border: none; padding: 12px; border-radius: 15px; font-weight: bold; cursor: pointer; }
+        .btn-off { background: #3a3a3c; color: white; }
+        .btn-on { background: white; color: black; }
     </style>
 </head>
 <body>
 
     <iframe id="target-web" src="https://play.xoc88.cc/?code=null"></iframe>
-    <div id="full-scan"></div>
-
-    <div id="tool-bubble" onclick="toggleTool(false)">
-        <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png" width="30" style="filter: invert(1);">
-    </div>
+    <div id="scanner-line"></div>
 
     <div id="main-tool">
-        <div class="header">
-            <span style="font-size: 11px; font-weight: bold;"><span class="dot"></span> GHOST ANALYZER</span>
-            <span style="font-size: 10px; color: #8e8e93;" id="session-display">ID: #5821</span>
+        <div class="status-bar">
+            <span>● LIVE SYNC ACTIVE</span>
+            <span id="session-tag" style="color:#8e8e93">PHIÊN: #82931</span>
         </div>
 
-        <div id="console">READY TO CAPTURE...</div>
+        <div id="console">Initializing neural link...</div>
 
-        <div class="res-val" id="prediction">---</div>
+        <div class="display-area">
+            <div id="res-val" style="color: #444;">WAIT</div>
+            <div id="timer-text" style="font-size: 12px; color: #8e8e93;">Đang chờ phiên mới: 60s</div>
+        </div>
+
+        <div class="timer-track">
+            <div id="timer-bar"></div>
+        </div>
 
         <div class="btn-group">
-            <button class="btn btn-hide" onclick="toggleTool(true)">THU NHỎ</button>
-            <button class="btn btn-scan" id="btn-scan" onclick="startAutoScan()">QUÉT NGAY</button>
+            <button class="btn btn-off" onclick="toggleAuto()">TỰ ĐỘNG: <span id="auto-status">TẮT</span></button>
+            <button class="btn btn-on" onclick="manualScan()">QUÉT NGAY</button>
         </div>
     </div>
 
     <script>
-        const tool = document.getElementById('main-tool');
-        const bubble = document.getElementById('tool-bubble');
-        const consoleBox = document.getElementById('console');
-        const radar = document.getElementById('full-scan');
-        const predict = document.getElementById('prediction');
-        let session = 5821;
+        let timeLeft = 60;
+        let isAuto = false;
+        let sessionId = 82931;
 
-        // Tự động nhảy log cho xịn
+        // 1. Đồng bộ thời gian thực 1 giây/lần
         setInterval(() => {
-            const randomHex = Math.random().toString(16).substring(2, 8).toUpperCase();
-            const logItems = [
-                `> Syncing Session #${session}...`,
-                `> Extracting MD5: ${randomHex}...`,
-                `> Capturing Frame Buffer...`,
-                `> Analyzing Pixel Density...`
+            timeLeft--;
+            if (timeLeft < 0) {
+                timeLeft = 60; // Reset phiên mới
+                sessionId++;
+                document.getElementById('session-tag').innerText = "PHIÊN: #" + sessionId;
+                if(isAuto) manualScan(); // Tự động quét khi sang giây 60
+            }
+
+            // Cập nhật giao diện
+            document.getElementById('timer-text').innerText = `Đang chờ phiên mới: ${timeLeft}s`;
+            document.getElementById('timer-bar').style.width = (timeLeft / 60 * 100) + "%";
+            
+            // Màu sắc thanh thời gian
+            if (timeLeft <= 10) document.getElementById('timer-bar').style.background = "#FF453A";
+            else document.getElementById('timer-bar').style.background = "#0A84FF";
+
+            // Dữ liệu console chạy ngẫu nhiên mô phỏng "đọc màn hình"
+            updateConsole();
+        }, 1000);
+
+        function updateConsole() {
+            const logs = [
+                `> Scanning Frame 0x${Math.random().toString(16).substr(2,4)}`,
+                `> MD5 Hash: ${Math.random().toString(36).substr(2,10)}`,
+                `> Decoding pixel data at [${Math.floor(Math.random()*100)},${Math.floor(Math.random()*100)}]`,
+                `> Packet received: ${Math.floor(Math.random()*1024)}kb`
             ];
-            if (Math.random() > 0.7) {
-                consoleBox.innerHTML = logItems[Math.floor(Math.random()*logItems.length)];
-            }
-        }, 2000);
-
-        function toggleTool(isHide) {
-            if(isHide) {
-                tool.style.display = 'none';
-                bubble.style.display = 'flex';
-                bubble.style.top = tool.style.top;
-                bubble.style.left = tool.style.left;
-            } else {
-                tool.style.display = 'block';
-                bubble.style.display = 'none';
-            }
+            const consoleBox = document.getElementById('console');
+            consoleBox.innerHTML += `<div>${logs[Math.floor(Math.random()*logs.length)]}</div>`;
+            consoleBox.scrollTop = consoleBox.scrollHeight;
         }
 
-        function startAutoScan() {
-            const btn = document.getElementById('btn-scan');
-            btn.disabled = true;
-            radar.style.display = 'block';
-            predict.innerText = "WAIT";
-            predict.style.color = "white";
+        function toggleAuto() {
+            isAuto = !isAuto;
+            document.getElementById('auto-status').innerText = isAuto ? "BẬT" : "TẮT";
+            document.getElementById('auto-status').style.color = isAuto ? "#32D74B" : "white";
+        }
 
-            // Giả lập quét dữ liệu màn hình
+        function manualScan() {
+            const line = document.getElementById('scanner-line');
+            const res = document.getElementById('res-val');
+            
+            line.style.display = 'block';
+            line.animate([{ top: '0%' }, { top: '100%' }], { duration: 1500, iterations: 1 });
+
             setTimeout(() => {
-                const isTai = Math.random() > 0.5;
-                session++;
-                document.getElementById('session-display').innerText = "ID: #" + session;
-                predict.innerText = isTai ? "TÀI" : "XỈU";
-                predict.style.color = isTai ? "var(--ios-red)" : "var(--ios-blue)";
-                radar.style.display = 'none';
-                btn.disabled = false;
-                consoleBox.innerHTML = `> SUCCESS: Data Received for #${session}`;
-            }, 3000);
+                line.style.display = 'none';
+                const win = Math.random() > 0.5;
+                res.innerText = win ? "TÀI" : "XỈU";
+                res.style.color = win ? "var(--ios-red)" : "var(--ios-blue)";
+                res.style.textShadow = `0 0 20px ${win ? 'rgba(255,69,58,0.5)' : 'rgba(10,132,255,0.5)'}`;
+            }, 1500);
         }
-
-        // HÀM KÉO THẢ (DRAGGABLE) CHO CẢ BẢNG VÀ BONG BÓNG
-        function makeDraggable(el) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            el.onmousedown = (e) => {
-                pos3 = e.clientX; pos4 = e.clientY;
-                document.onmouseup = () => { document.onmousemove = null; };
-                document.onmousemove = (e) => {
-                    pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY;
-                    pos3 = e.clientX; pos4 = e.clientY;
-                    el.style.top = (el.offsetTop - pos2) + "px";
-                    el.style.left = (el.offsetLeft - pos1) + "px";
-                };
-            };
-        }
-        makeDraggable(tool);
-        makeDraggable(bubble);
     </script>
 </body>
 </html>
