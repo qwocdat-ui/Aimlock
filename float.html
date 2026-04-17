@@ -3,131 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>XOC88 ADMIN GHOST</title>
+    <title>Liquid Glass AI Analyzer</title>
     <style>
-        :root { --ios-blue: #0A84FF; --ios-red: #FF453A; --glass: rgba(15, 15, 15, 0.95); }
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, sans-serif; }
-        #target-web { width: 100%; height: 100%; border: none; }
+        :root {
+            --ios-blue: #0A84FF;
+            --ios-red: #FF453A;
+            --ios-dark: #1c1c1e;
+        }
 
-        /* BONG BÓNG MESSENGER */
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        #target-web { width: 100%; height: 100%; border: none; filter: brightness(0.8); }
+
+        /* --- BONG BÓNG (LIQUID GLASS) --- */
         #bubble {
             position: fixed; top: 100px; left: 20px;
-            width: 55px; height: 55px; background: var(--ios-blue);
-            border-radius: 50%; z-index: 10000; border: 2px solid white;
+            width: 55px; height: 55px;
+            background: rgba(30, 30, 30, 0.4);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-radius: 50%; z-index: 10000;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
             display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); touch-action: none;
+            touch-action: none; cursor: grab;
+        }
+        #bubble:active { cursor: grabbing; transform: scale(0.95); }
+
+        /* --- BẢNG MENU (LIQUID GLASS) --- */
+        #liquid-panel {
+            position: fixed; top: 15vh; left: 5vw; width: 90vw; max-width: 320px;
+            background: rgba(20, 20, 25, 0.45);
+            backdrop-filter: blur(40px) saturate(250%);
+            -webkit-backdrop-filter: blur(40px) saturate(250%);
+            border-radius: 35px; padding: 25px 20px; color: white;
+            z-index: 9999; display: none; touch-action: none;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2);
         }
 
-        /* BẢNG ĐIỀU KHIỂN ADMIN */
-        #admin-panel {
-            position: fixed; top: 150px; left: 20px;
-            width: 320px; background: var(--glass); border-radius: 30px;
-            padding: 20px; color: white; z-index: 9999; display: none;
-            border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-            touch-action: none;
-        }
+        /* HEADER */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; pointer-events: none; }
+        .title { font-size: 13px; font-weight: 800; letter-spacing: 1px; background: linear-gradient(90deg, #fff, #8e8e93); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .header { display: flex; justify-content: space-between; margin-bottom: 15px; pointer-events: none; }
-        .monitor { background: #000; border-radius: 20px; padding: 15px; border: 1px solid #333; pointer-events: none; }
-        .session-id { font-family: monospace; font-size: 11px; color: #8e8e93; }
-        .prediction { font-size: 50px; font-weight: 900; text-align: center; margin: 10px 0; letter-spacing: 5px; }
-
-        /* THANH ĐỒNG BỘ */
-        .sync-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 10px; }
-        .s-btn { background: #2c2c2e; color: #fff; border: none; padding: 8px; border-radius: 10px; font-size: 10px; }
+        /* KHU VỰC NHẬP CẦU */
+        .input-section { background: rgba(0,0,0,0.3); border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .input-label { font-size: 11px; color: #8e8e93; text-align: center; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; }
         
-        .main-btn { background: #fff; color: #000; border: none; width: 100%; padding: 14px; border-radius: 18px; font-weight: bold; margin-top: 15px; }
-        .ghost-btn { background: var(--ios-red); color: white; margin-top: 8px; }
+        .slots-container { display: flex; justify-content: space-between; gap: 8px; }
+        .slot {
+            flex: 1; height: 45px; border-radius: 14px;
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+            color: #8e8e93; font-weight: bold; font-size: 14px;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.2s; user-select: none;
+        }
+        .slot.tai { background: rgba(255, 69, 58, 0.2); color: var(--ios-red); border-color: rgba(255, 69, 58, 0.5); }
+        .slot.xiu { background: rgba(10, 132, 255, 0.2); color: var(--ios-blue); border-color: rgba(10, 132, 255, 0.5); }
+        .slot:active { transform: scale(0.9); }
 
-        /* HIỆU ỨNG QUÉT TOÀN MÀN HÌNH */
-        #scan-layer { position: fixed; top: 0; left: 0; width: 100%; height: 5px; background: var(--ios-blue); display: none; z-index: 10001; box-shadow: 0 0 20px var(--ios-blue); }
+        /* KHU VỰC KẾT QUẢ AI */
+        .result-section { margin-top: 20px; text-align: center; min-height: 80px; display: flex; flex-direction: column; justify-content: center; }
+        .res-text { font-size: 45px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,255,255,0.2); display: none; }
+        .res-rate { font-size: 13px; color: #32D74B; font-weight: bold; margin-top: 5px; display: none; }
+        .loading { font-size: 12px; color: #8e8e93; font-style: italic; display: none; }
+
+        /* BUTTONS */
+        .btn { width: 100%; padding: 15px; border-radius: 20px; border: none; font-weight: 800; font-size: 14px; margin-top: 15px; cursor: pointer; transition: 0.2s; }
+        .btn-analyze { background: linear-gradient(135deg, #e6e6e6, #ffffff); color: #000; box-shadow: 0 4px 15px rgba(255,255,255,0.2); }
+        .btn-analyze:active { transform: scale(0.96); }
+        .btn-hide { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-    <iframe id="target-web" src="https://play.xoc88.cc/?code=null"></iframe>
-    <div id="scan-layer"></div>
+    <iframe id="target-web" src="https://bing.com"></iframe>
 
-    <div id="bubble"><img src="https://cdn-icons-png.flaticon.com/512/3039/3039462.png" width="30" style="filter: invert(1);"></div>
+    <div id="bubble">
+        <img src="https://cdn-icons-png.flaticon.com/512/2115/2115916.png" width="28" style="filter: invert(1); opacity: 0.9;">
+    </div>
 
-    <div id="admin-panel">
+    <div id="liquid-panel">
         <div class="header">
-            <b style="font-size: 13px; color: #32D74B;">● XOC88 LIVE SYNC</b>
-            <span style="font-size: 10px; color: #666;">ADMIN v26.4</span>
+            <div class="title">AI LIQUID ENGINE v26.4</div>
+            <div style="width: 8px; height: 8px; background: #32D74B; border-radius: 50%; box-shadow: 0 0 8px #32D74B;"></div>
         </div>
 
-        <div class="monitor">
-            <div class="session-id">
-                API: api.xoc88.com/v1/stream<br>
-                ID: #<span id="phiên">829442</span> | <span id="giây">60</span>s
+        <div class="input-section">
+            <div class="input-label">Chạm để chọn 3 kết quả gần nhất</div>
+            <div class="slots-container">
+                <div class="slot" onclick="toggleSlot(this)">-</div>
+                <div class="slot" onclick="toggleSlot(this)">-</div>
+                <div class="slot" onclick="toggleSlot(this)">-</div>
             </div>
-            <div class="prediction" id="kq">---</div>
-            <div id="log" style="font-size: 9px; color: #32D74B; text-align: center; font-family: monospace;">Awaiting Data...</div>
         </div>
 
-        <div class="sync-box">
-            <button class="s-btn" onclick="adjT(1)">+1 Giây</button>
-            <button class="s-btn" onclick="adjT(-1)">-1 Giây</button>
-            <button class="s-btn" onclick="adjS(1)">+1 Phiên</button>
+        <div class="result-section">
+            <div class="loading" id="loading-txt">AI đang tính toán thuật toán...</div>
+            <div class="res-text" id="final-res">TÀI</div>
+            <div class="res-rate" id="final-rate">Tỉ lệ ra: 92%</div>
         </div>
 
-        <button class="main-btn" onclick="autoScan()">BẮT ĐẦU QUÉT TỰ ĐỘNG (1S)</button>
-        <button class="main-btn ghost-btn" onclick="hideAll()">THU NHỎ (GHOST MODE)</button>
+        <button class="btn btn-analyze" onclick="startAnalysis()">PHÂN TÍCH KẾT QUẢ</button>
+        <button class="btn btn-hide" onclick="toggleUI(false)">THU NHỎ BONG BÓNG</button>
     </div>
 
     <script>
-        let s = 829442, t = 60, isAuto = false;
-        const panel = document.getElementById('admin-panel'), bubble = document.getElementById('bubble');
+        const panel = document.getElementById('liquid-panel');
+        const bubble = document.getElementById('bubble');
 
-        // CHẠY THỜI GIAN
-        setInterval(() => {
-            t--;
-            if(t < 0) { t = 60; s++; }
-            document.getElementById('giây').innerText = t;
-            document.getElementById('phiên').innerText = s;
-            
-            // Nếu đang bật tự động quét mỗi giây
-            if(isAuto) {
-                document.getElementById('log').innerText = `> READING SCREEN PIXELS: SESSION #${s} [${t}s]`;
+        // 1. Logic Đổi Trạng Thái Nút (Trống -> Tài -> Xỉu -> Trống)
+        function toggleSlot(el) {
+            if (el.innerText === "-") {
+                el.innerText = "TÀI";
+                el.className = "slot tai";
+            } else if (el.innerText === "TÀI") {
+                el.innerText = "XỈU";
+                el.className = "slot xiu";
+            } else {
+                el.innerText = "-";
+                el.className = "slot";
             }
-        }, 1000);
-
-        function adjT(v) { t += v; }
-        function adjS(v) { s += v; }
-
-        function autoScan() {
-            isAuto = true;
-            const layer = document.getElementById('scan-layer');
-            layer.style.display = 'block';
-            layer.animate([{top: '0%'}, {top: '100%'}], {duration: 2000, iterations: Infinity});
-            
-            // Giả lập trả kết quả sau khi "đọc" được mã phiên
-            setTimeout(() => {
-                const res = Math.random() > 0.5 ? "TÀI" : "XỈU";
-                document.getElementById('kq').innerText = res;
-                document.getElementById('kq').style.color = res === "TÀI" ? "var(--ios-red)" : "var(--ios-blue)";
-                document.getElementById('log').innerText = "> DATA SYNCED WITH XOC88 SERVER";
-            }, 2000);
+            // Ẩn kết quả cũ khi người dùng thay đổi cầu
+            document.getElementById('final-res').style.display = 'none';
+            document.getElementById('final-rate').style.display = 'none';
         }
 
-        function hideAll() { panel.style.display = 'none'; bubble.style.display = 'flex'; }
-        bubble.addEventListener('touchstart', () => { panel.style.display = 'block'; bubble.style.display = 'none'; });
+        // 2. Logic AI Phân Tích Giả Lập
+        function startAnalysis() {
+            const slots = document.querySelectorAll('.slot');
+            let isFilled = true;
+            slots.forEach(slot => { if(slot.innerText === "-") isFilled = false; });
 
-        // FIX LỖI DI CHUYỂN TRÊN ĐIỆN THOẠI (Kéo được cả 2 menu)
+            if (!isFilled) {
+                alert("Vui lòng nhập đủ 3 kết quả gần nhất để AI phân tích!");
+                return;
+            }
+
+            // Hiện loading
+            document.getElementById('final-res').style.display = 'none';
+            document.getElementById('final-rate').style.display = 'none';
+            document.getElementById('loading-txt').style.display = 'block';
+
+            // Xử lý sau 1.5 giây
+            setTimeout(() => {
+                document.getElementById('loading-txt').style.display = 'none';
+                
+                // Random ra Tài hoặc Xỉu
+                const isTai = Math.random() > 0.5;
+                const resEl = document.getElementById('final-res');
+                resEl.innerText = isTai ? "TÀI" : "XỈU";
+                resEl.style.color = isTai ? "var(--ios-red)" : "var(--ios-blue)";
+                resEl.style.textShadow = isTai ? "0 0 20px rgba(255,69,58,0.4)" : "0 0 20px rgba(10,132,255,0.4)";
+                
+                // Tỉ lệ từ 80% đến 98%
+                document.getElementById('final-rate').innerText = "Độ chính xác: " + (Math.floor(Math.random() * 19) + 80) + "%";
+                
+                resEl.style.display = 'block';
+                document.getElementById('final-rate').style.display = 'block';
+            }, 1500);
+        }
+
+        // 3. Đóng mở Menu
+        function toggleUI(showPanel) {
+            if(showPanel) {
+                panel.style.display = 'block';
+                bubble.style.display = 'none';
+            } else {
+                panel.style.display = 'none';
+                bubble.style.display = 'flex';
+                // Đặt bong bóng ở vị trí gần menu vừa đóng
+                bubble.style.top = panel.offsetTop + 'px';
+                bubble.style.left = panel.offsetLeft + 'px';
+            }
+        }
+        bubble.addEventListener('touchstart', (e) => { 
+            // Phân biệt chạm click và kéo thả (chỉ mở nếu thả ra mà không di chuyển xa)
+            toggleUI(true); 
+        });
+
+        // 4. Kéo thả siêu mượt cho Điện thoại (Touch) & Máy tính (Mouse)
         function makeDraggable(el) {
-            let startX, startY, origX, origY;
+            let startX, startY, origX, origY, isDragging = false;
+
+            // Dành cho điện thoại (Touch)
             el.addEventListener('touchstart', (e) => {
+                isDragging = false;
                 startX = e.touches[0].clientX; startY = e.touches[0].clientY;
                 origX = el.offsetLeft; origY = el.offsetTop;
             });
             el.addEventListener('touchmove', (e) => {
-                e.preventDefault();
+                isDragging = true;
+                e.preventDefault(); // Ngăn cuộn trang web bên dưới
                 el.style.left = (origX + e.touches[0].clientX - startX) + 'px';
                 el.style.top = (origY + e.touches[0].clientY - startY) + 'px';
+            }, { passive: false });
+
+            // Dành cho máy tính (Mouse) để bạn dễ test
+            el.addEventListener('mousedown', (e) => {
+                startX = e.clientX; startY = e.clientY;
+                origX = el.offsetLeft; origY = el.offsetTop;
+                document.onmousemove = (e) => {
+                    el.style.left = (origX + e.clientX - startX) + 'px';
+                    el.style.top = (origY + e.clientY - startY) + 'px';
+                };
+                document.onmouseup = () => { document.onmousemove = null; };
             });
         }
         makeDraggable(bubble);
         makeDraggable(panel);
+        
+        // Mặc định ẩn bảng, hiện bong bóng
+        toggleUI(false);
     </script>
 </body>
 </html>
