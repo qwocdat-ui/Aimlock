@@ -3,60 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bảng Xếp Hạng Lớp</title>
+    <title>Event Voting - Exclusive</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-main: #ffffff;
-            --text-muted: #ebebf599;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --ios-blue: #0A84FF;
-            --ios-red: #FF453A;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: var(--text-main); min-height: 100vh; padding-bottom: 40px; }
-        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
-        .header { padding: 50px 20px 30px; text-align: center; }
-        .header h1 { font-size: 28px; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .header p { color: var(--text-muted); font-size: 15px; margin-top: 5px; }
-        .container { padding: 0 20px; max-width: 600px; margin: 0 auto; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        /* Animated Background */
+        body { 
+            background: #000; 
+            color: #fff; 
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        .bg-glow {
+            position: fixed;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(10,132,255,0.4) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            top: -100px; left: -100px;
+            z-index: -1;
+            animation: float 10s infinite alternate;
+        }
+        .bg-glow-2 {
+            position: fixed;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(142,68,255,0.3) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            bottom: -150px; right: -100px;
+            z-index: -1;
+            animation: float 8s infinite alternate-reverse;
+        }
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Intro / Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            animation: fadeIn 1.5s ease-out;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #fff, #0A84FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .hero p {
+            font-size: 1.1rem;
+            color: #aaa;
+            max-width: 400px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .scroll-down {
+            font-size: 30px;
+            color: #fff;
+            animation: bounce 2s infinite;
+            text-decoration: none;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(10px); }
+            60% { transform: translateY(5px); }
+        }
+
+        /* Voting Section */
+        .container { padding: 40px 20px; max-width: 600px; margin: 0 auto; min-height: 100vh; }
+        .section-title { font-size: 24px; font-weight: bold; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
+        
         .candidate-list { display: flex; flex-direction: column; gap: 15px; }
-        .candidate-card { display: flex; align-items: center; padding: 15px; transition: transform 0.2s ease; }
-        .candidate-card:active { transform: scale(0.97); }
-        .candidate-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.3); margin-right: 15px; }
+        
+        .glass-panel { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 20px; 
+            padding: 15px; 
+            display: flex; 
+            align-items: center;
+            /* Scroll Reveal Setup */
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-panel.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .glass-panel:active { transform: scale(0.97); transition: 0.1s; }
+
+        .candidate-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid rgba(255,255,255,0.1); }
         .candidate-info { flex-grow: 1; }
-        .candidate-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-        .candidate-votes { font-size: 14px; color: var(--text-muted); }
-        .vote-btn { background: var(--ios-blue); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(10, 132, 255, 0.4); }
-        .vote-btn:active { opacity: 0.7; }
+        .candidate-name { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
+        .candidate-votes { font-size: 14px; color: #888; }
+        
+        .vote-btn { 
+            background: rgba(10,132,255,0.15); 
+            color: var(--ios-blue); 
+            border: 1px solid var(--ios-blue); 
+            padding: 8px 20px; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s;
+        }
+        .vote-btn:active { background: var(--ios-blue); color: #fff; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>BẢNG XẾP HẠNG</h1>
-        <p>Bình chọn Những Thằng Ngu Nhất Hành Tinh</p>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="hero">
+        <h1>VOTING</h1>
+        <p>Vote Những Thằng Ngu Nhất Hành Tinh!</p>
+        <a href="#vote-section" class="scroll-down"><i class="fas fa-chevron-down"></i></a>
     </div>
-    <div class="container">
+
+    <div class="container" id="vote-section">
+        <div class="section-title">Bảng Xếp Hạng Trực Tiếp</div>
         <div class="candidate-list" id="voting-list">
-            <div style="text-align:center; padding: 20px; color: var(--text-muted);">
-                <i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>Đang tải dữ liệu...
+            <div style="text-align:center; padding: 30px; color: #666;">
+                <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Đang tải dữ liệu...
             </div>
         </div>
     </div>
 
     <script>
-        const firebaseConfig = {
-            databaseURL: "https://keyquocdat-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
+        const firebaseConfig = { databaseURL: "https://keyquocdat-default-rtdb.asia-southeast1.firebasedatabase.app" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const candidatesRef = firebase.database().ref('candidates');
+
+        // Observer để tạo hiệu ứng lướt tới đâu hiện tới đó
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        }, { threshold: 0.1 });
 
         candidatesRef.on('value', snapshot => {
             const votingList = document.getElementById('voting-list');
@@ -66,32 +171,41 @@
             snapshot.forEach(child => {
                 candidates.push({ id: child.key, ...child.val() });
             });
+            
+            // Xếp hạng cao nhất lên đầu
             candidates.sort((a, b) => b.votes - a.votes);
 
             if(candidates.length === 0) {
-                votingList.innerHTML = `<div style="text-align:center; color:#888;">Chưa có dữ liệu.</div>`;
+                votingList.innerHTML = `<div style="text-align:center; color:#555;">Chưa có danh sách ứng viên.</div>`;
                 return;
             }
 
-            candidates.forEach(cand => {
-                const defaultImg = "https://ui-avatars.com/api/?name=" + encodeURIComponent(cand.name) + "&background=random";
-                const imgSource = cand.imageUrl ? cand.imageUrl : defaultImg;
-                votingList.innerHTML += `
-                    <div class="glass-panel candidate-card">
-                        <img src="${imgSource}" class="candidate-img" onerror="this.src='${defaultImg}'">
-                        <div class="candidate-info">
-                            <div class="candidate-name">${cand.name}</div>
-                            <div class="candidate-votes"><i class="fas fa-heart" style="color:var(--ios-red); font-size:12px;"></i> ${cand.votes} lượt vote</div>
-                        </div>
-                        <button class="vote-btn" onclick="vote('${cand.id}', ${cand.votes})">Vote</button>
+            candidates.forEach((cand, index) => {
+                // Hiển thị Top 1,2,3 có màu khác biệt một chút (tùy chọn)
+                const rankIcon = index === 0 ? '👑' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : `#${index+1}`));
+                const imgSource = cand.imageUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent(cand.name);
+                
+                const card = document.createElement('div');
+                card.className = 'glass-panel';
+                card.innerHTML = `
+                    <div style="font-size: 20px; font-weight: bold; width: 30px; color: #888; text-align: center;">${rankIcon}</div>
+                    <img src="${imgSource}" class="candidate-img">
+                    <div class="candidate-info">
+                        <div class="candidate-name">${cand.name}</div>
+                        <div class="candidate-votes"><i class="fas fa-heart" style="color:#FF453A;"></i> ${cand.votes} votes</div>
                     </div>
+                    <button class="vote-btn" onclick="vote('${cand.id}', ${cand.votes})">Vote</button>
                 `;
+                votingList.appendChild(card);
+                
+                // Kích hoạt hiệu ứng observer cho thẻ này
+                observer.observe(card);
             });
         });
 
         function vote(id, currentVotes) {
             candidatesRef.child(id).update({ votes: currentVotes + 1 });
-            if (navigator.vibrate) navigator.vibrate(50);
+            if (navigator.vibrate) navigator.vibrate(50); // Rung nhẹ thiết bị
         }
     </script>
 </body>
