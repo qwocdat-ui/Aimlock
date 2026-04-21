@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Event Voting - Exclusive</title>
+    <title>Event Voting - VIP</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -15,198 +15,175 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --ios-blue: #0A84FF;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* Animated Background */
-        body { 
-            background: #000; 
-            color: #fff; 
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-        .bg-glow {
-            position: fixed;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(10,132,255,0.4) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            top: -100px; left: -100px;
-            z-index: -1;
-            animation: float 10s infinite alternate;
-        }
-        .bg-glow-2 {
-            position: fixed;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(142,68,255,0.3) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            bottom: -150px; right: -100px;
-            z-index: -1;
-            animation: float 8s infinite alternate-reverse;
-        }
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-        }
+        body { background: #000; color: #fff; overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* Hiệu ứng Loading */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--ios-blue); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Intro / Hero Section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            animation: fadeIn 1.5s ease-out;
-        }
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, #fff, #0A84FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            font-size: 1.1rem;
-            color: #aaa;
-            max-width: 400px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-        .scroll-down {
-            font-size: 30px;
-            color: #fff;
-            animation: bounce 2s infinite;
-            text-decoration: none;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(10px); }
-            60% { transform: translateY(5px); }
-        }
+        /* Background Động */
+        .bg-glow { position: fixed; width: 300px; height: 300px; background: radial-gradient(circle, rgba(10,132,255,0.4) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; top: -100px; left: -100px; z-index: -1; animation: float 10s infinite alternate; }
+        .bg-glow-2 { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(142,68,255,0.3) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; bottom: -150px; right: -100px; z-index: -1; animation: float 8s infinite alternate-reverse; }
+        @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 50px); } }
 
-        /* Voting Section */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .hero h1 { font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #fff, #0A84FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .hero p { color: #aaa; max-width: 400px; line-height: 1.6; margin-bottom: 30px; }
+        .scroll-down { font-size: 30px; color: #fff; animation: bounce 2s infinite; text-decoration: none; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(10px); } }
+
         .container { padding: 40px 20px; max-width: 600px; margin: 0 auto; min-height: 100vh; }
         .section-title { font-size: 24px; font-weight: bold; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
-        
         .candidate-list { display: flex; flex-direction: column; gap: 15px; }
         
         .glass-panel { 
-            background: var(--glass-bg); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid var(--glass-border); 
-            border-radius: 20px; 
-            padding: 15px; 
-            display: flex; 
-            align-items: center;
-            /* Scroll Reveal Setup */
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; display: flex; align-items: center;
+            opacity: 0; transform: translateY(50px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .glass-panel.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        .glass-panel:active { transform: scale(0.97); transition: 0.1s; }
-
+        .glass-panel.show { opacity: 1; transform: translateY(0); }
         .candidate-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid rgba(255,255,255,0.1); }
         .candidate-info { flex-grow: 1; }
         .candidate-name { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
-        .candidate-votes { font-size: 14px; color: #888; }
+        .vote-btn { background: rgba(10,132,255,0.15); color: var(--ios-blue); border: 1px solid var(--ios-blue); padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         
-        .vote-btn { 
-            background: rgba(10,132,255,0.15); 
-            color: var(--ios-blue); 
-            border: 1px solid var(--ios-blue); 
-            padding: 8px 20px; 
-            border-radius: 20px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: 0.3s;
-        }
-        .vote-btn:active { background: var(--ios-blue); color: #fff; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #banned-screen { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #111; z-index: 10000; flex-direction: column; justify-content: center; align-items: center; color: #FF453A; text-align: center; padding: 20px;}
     </style>
 </head>
 <body>
-    <div class="bg-glow"></div>
-    <div class="bg-glow-2"></div>
+    <div id="loader">
+        <div class="spinner"></div>
+        <p style="color:#aaa; font-weight:600;">Đang khởi tạo bảo mật...</p>
+    </div>
+
+    <div id="banned-screen">
+        <i class="fas fa-ban" style="font-size: 60px; margin-bottom: 20px;"></i>
+        <h2>TRUY CẬP BỊ TỪ CHỐI</h2>
+        <p style="color:#aaa; margin-top:10px;">Thiết bị hoặc IP của bạn đã bị quản trị viên chặn do nghi ngờ spam.</p>
+    </div>
+
+    <div class="bg-glow"></div><div class="bg-glow-2"></div>
 
     <div class="hero">
         <h1>VOTING</h1>
-        <p>Vote Những Thằng Ngu Nhất Hành Tinh!</p>
+        <p>Bình chọn cho những thằng ngu nhất hành tinh. Mỗi người chỉ được vinh danh 1 lần duy nhất!</p>
         <a href="#vote-section" class="scroll-down"><i class="fas fa-chevron-down"></i></a>
     </div>
 
     <div class="container" id="vote-section">
         <div class="section-title">Bảng Xếp Hạng Trực Tiếp</div>
-        <div class="candidate-list" id="voting-list">
-            <div style="text-align:center; padding: 30px; color: #666;">
-                <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Đang tải dữ liệu...
-            </div>
-        </div>
+        <div class="candidate-list" id="voting-list"></div>
     </div>
 
     <script>
         const firebaseConfig = { databaseURL: "https://keyquocdat-default-rtdb.asia-southeast1.firebasedatabase.app" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const candidatesRef = firebase.database().ref('candidates');
+        const db = firebase.database();
+        
+        let userIP = "Unknown";
+        let userDevice = navigator.userAgent;
 
-        // Observer để tạo hiệu ứng lướt tới đâu hiện tới đó
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('show');
+        // 1. Khởi tạo & Kiểm tra IP
+        async function initApp() {
+            try {
+                // Lấy IP thật qua API
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                userIP = data.ip;
+            } catch(e) { console.log("Không lấy được IP"); }
+
+            const safeIP = userIP.replace(/\./g, '_'); // Firebase không cho lưu dấu chấm (.)
+
+            // Kiểm tra xem IP có bị ban không
+            db.ref('banned_ips/' + safeIP).once('value', snap => {
+                if(snap.exists()) {
+                    document.getElementById('banned-screen').style.display = 'flex';
+                    document.getElementById('loader').style.display = 'none';
+                    return; // Ngưng chạy code nếu bị ban
                 }
+
+                // Không bị ban -> Lưu lịch sử truy cập cho Admin soi
+                db.ref('visitors/' + safeIP).set({
+                    ip: userIP,
+                    device: userDevice,
+                    time: new Date().toLocaleString('vi-VN')
+                });
+
+                loadCandidates();
+                
+                // Tắt loader mượt mà
+                setTimeout(() => {
+                    document.getElementById('loader').style.opacity = '0';
+                    setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+                }, 800);
             });
+        }
+
+        // 2. Load ứng viên & Observer lướt
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
         }, { threshold: 0.1 });
 
-        candidatesRef.on('value', snapshot => {
-            const votingList = document.getElementById('voting-list');
-            votingList.innerHTML = '';
-            let candidates = [];
-            
-            snapshot.forEach(child => {
-                candidates.push({ id: child.key, ...child.val() });
-            });
-            
-            // Xếp hạng cao nhất lên đầu
-            candidates.sort((a, b) => b.votes - a.votes);
+        function loadCandidates() {
+            db.ref('candidates').on('value', snapshot => {
+                const votingList = document.getElementById('voting-list');
+                votingList.innerHTML = '';
+                let candidates = [];
+                snapshot.forEach(child => { candidates.push({ id: child.key, ...child.val() }); });
+                candidates.sort((a, b) => b.votes - a.votes);
 
-            if(candidates.length === 0) {
-                votingList.innerHTML = `<div style="text-align:center; color:#555;">Chưa có danh sách ứng viên.</div>`;
-                return;
+                candidates.forEach((cand, index) => {
+                    const imgSource = cand.imageUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent(cand.name);
+                    const card = document.createElement('div');
+                    card.className = 'glass-panel';
+                    card.innerHTML = `
+                        <div style="font-size: 20px; font-weight: bold; width: 30px; color: #888; text-align: center;">#${index+1}</div>
+                        <img src="${imgSource}" class="candidate-img">
+                        <div class="candidate-info">
+                            <div class="candidate-name">${cand.name}</div>
+                            <div style="font-size: 14px; color: #888;"><i class="fas fa-heart" style="color:#FF453A;"></i> ${cand.votes} votes</div>
+                        </div>
+                        <button class="vote-btn" onclick="processVote('${cand.id}', '${cand.name}')">Vote</button>
+                    `;
+                    votingList.appendChild(card);
+                    observer.observe(card);
+                });
+            });
+        }
+
+        // 3. Logic Vote & Kiểm tra trùng tên
+        function processVote(candId, candName) {
+            // Check bộ nhớ đệm thiết bị
+            if(localStorage.getItem('has_voted')) {
+                return alert("Máy này đã vote rồi! Không được spam bạn nhé.");
             }
 
-            candidates.forEach((cand, index) => {
-                // Hiển thị Top 1,2,3 có màu khác biệt một chút (tùy chọn)
-                const rankIcon = index === 0 ? '👑' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : `#${index+1}`));
-                const imgSource = cand.imageUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent(cand.name);
-                
-                const card = document.createElement('div');
-                card.className = 'glass-panel';
-                card.innerHTML = `
-                    <div style="font-size: 20px; font-weight: bold; width: 30px; color: #888; text-align: center;">${rankIcon}</div>
-                    <img src="${imgSource}" class="candidate-img">
-                    <div class="candidate-info">
-                        <div class="candidate-name">${cand.name}</div>
-                        <div class="candidate-votes"><i class="fas fa-heart" style="color:#FF453A;"></i> ${cand.votes} votes</div>
-                    </div>
-                    <button class="vote-btn" onclick="vote('${cand.id}', ${cand.votes})">Vote</button>
-                `;
-                votingList.appendChild(card);
-                
-                // Kích hoạt hiệu ứng observer cho thẻ này
-                observer.observe(card);
-            });
-        });
+            const voterName = prompt(`Nhập Tên/Biệt danh của bạn để xác nhận vote cho ${candName}:\n(Chỉ được vote 1 lần duy nhất)`);
+            if(!voterName || voterName.trim() === "") return;
 
-        function vote(id, currentVotes) {
-            candidatesRef.child(id).update({ votes: currentVotes + 1 });
-            if (navigator.vibrate) navigator.vibrate(50); // Rung nhẹ thiết bị
+            const safeVoterName = voterName.trim().toLowerCase().replace(/[.#$\[\]]/g, '');
+
+            // Check trên database xem tên này vote chưa
+            db.ref('voted_names/' + safeVoterName).once('value', snap => {
+                if(snap.exists()) {
+                    alert("Tên này đã được sử dụng để vote rồi. Vui lòng không gian lận!");
+                } else {
+                    // Cập nhật vote
+                    db.ref('candidates/' + candId + '/votes').set(firebase.database.ServerValue.increment(1));
+                    // Lưu tên người vote
+                    db.ref('voted_names/' + safeVoterName).set({ time: new Date().toLocaleString('vi-VN'), votedFor: candName });
+                    
+                    localStorage.setItem('has_voted', 'true');
+                    alert(`Cảm ơn ${voterName}! Bạn đã vote thành công.`);
+                    if (navigator.vibrate) navigator.vibrate(50);
+                }
+            });
         }
+
+        // Khởi động
+        window.onload = initApp;
     </script>
 </body>
 </html>
