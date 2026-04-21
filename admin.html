@@ -20,11 +20,12 @@
         .glass-panel { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin-bottom: 20px; display: none; }
         .glass-panel.active { display: block; }
         
-        input { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; color: white; margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; color: white; margin-bottom: 15px; outline: none;}
         .btn { width: 100%; background: #0A84FF; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
         
         .list-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 10px; font-size: 14px; }
         .btn-danger { background: #FF453A; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-size: 12px;}
+        .btn-success { background: #34C759; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold;}
     </style>
 </head>
 <body>
@@ -46,7 +47,11 @@
         </div>
 
         <div id="tab-security" class="glass-panel">
-            <h3>Nhật ký truy cập gần đây:</h3>
+            <h3 style="color: #FF453A; border-bottom: 1px solid rgba(255,69,58,0.3); padding-bottom: 5px;">Danh sách IP bị chặn:</h3>
+            <div id="banned-list" style="margin-top: 10px; margin-bottom: 30px; max-height: 200px; overflow-y: auto;">
+                </div>
+
+            <h3 style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">Nhật ký truy cập (All):</h3>
             <div id="visitor-list" style="margin-top: 10px; max-height: 400px; overflow-y: auto;"></div>
         </div>
     </div>
@@ -65,7 +70,7 @@
             event.currentTarget.classList.add('active');
         }
 
-        // --- XỬ LÝ ỨNG VIÊN ---
+        // --- ỨNG VIÊN ---
         function processImage(event) {
             const file = event.target.files[0];
             if(!file) return;
@@ -74,8 +79,7 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const scaleSize = 150 / img.width;
-                    canvas.width = 150; canvas.height = img.height * scaleSize;
+                    canvas.width = 150; canvas.height = img.height * (150 / img.width);
                     canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                     currentBase64 = canvas.toDataURL('image/jpeg', 0.8);
                 }
@@ -102,31 +106,55 @@
             });
         });
 
-        // --- XỬ LÝ TRUY CẬP VÀ BAN IP ---
+        // --- NHẬT KÝ TRUY CẬP ---
         db.ref('visitors').on('value', snapshot => {
             const list = document.getElementById('visitor-list');
             list.innerHTML = '';
             let visitors = [];
             snapshot.forEach(child => visitors.push(child.val()));
-            
-            // Hiện từ mới nhất đến cũ nhất
             visitors.reverse().forEach(v => {
                 list.innerHTML += `
                     <div class="list-item">
                         <b style="color:var(--ios-blue)">IP: ${v.ip}</b> <br>
                         <span style="font-size:12px; color:#aaa;">Time: ${v.time}</span> <br>
                         <span style="font-size:11px; color:#888;">Device: ${v.device}</span> <br>
-                        <button class="btn-danger" onclick="banIP('${v.ip}')"><i class="fas fa-ban"></i> Chặn IP Này</button>
+                        <button class="btn-danger" onclick="banIP('${v.ip}')"><i class="fas fa-ban"></i> Chặn IP</button>
                     </div>
                 `;
             });
         });
 
         function banIP(ip) {
-            if(confirm(`Bạn có chắc muốn chặn vĩnh viễn IP: ${ip}?`)) {
-                const safeIP = ip.replace(/\./g, '_');
-                db.ref('banned_ips/' + safeIP).set(true).then(() => {
-                    alert("Đã khóa mõm IP này!");
+            if(confirm(`Khóa mõm IP: ${ip} ?`)) {
+                db.ref('banned_ips/' + ip.replace(/\./g, '_')).set(true);
+            }
+        }
+
+        // --- QUẢN LÝ BỎ CHẶN IP ---
+        db.ref('banned_ips').on('value', snapshot => {
+            const list = document.getElementById('banned-list');
+            list.innerHTML = '';
+            let count = 0;
+            snapshot.forEach(child => {
+                count++;
+                const safeIP = child.key;
+                const realIP = safeIP.replace(/_/g, '.'); // Chuyển dấu _ về lại dấu . để nhìn cho dễ
+                list.innerHTML += `
+                    <div class="list-item" style="border-left: 4px solid #FF453A; display:flex; justify-content:space-between; align-items:center;">
+                        <b style="color:#FF453A">${realIP}</b> 
+                        <button class="btn-success" onclick="unbanIP('${safeIP}', '${realIP}')"><i class="fas fa-unlock"></i> Bỏ Chặn</button>
+                    </div>
+                `;
+            });
+            if(count === 0) {
+                list.innerHTML = `<p style="color:#888; font-size:14px; text-align:center;">Không có IP nào bị chặn.</p>`;
+            }
+        });
+
+        function unbanIP(safeIP, realIP) {
+            if(confirm(`Cho phép IP ${realIP} truy cập lại vào web?`)) {
+                db.ref('banned_ips/' + safeIP).remove().then(() => {
+                    alert("Đã ân xá cho IP này thành công!");
                 });
             }
         }
