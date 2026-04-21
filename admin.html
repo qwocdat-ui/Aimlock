@@ -2,90 +2,101 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Quản Lý Bầu Chọn</title>
-    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root {
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
-            --text-main: #ffffff;
-            --text-muted: #ebebf599;
             --ios-blue: #0A84FF;
-            --ios-red: #FF453A;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background: linear-gradient(135deg, #2b1055 0%, #7597de 100%); color: var(--text-main); min-height: 100vh; padding-bottom: 40px; }
-        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3); }
-        .header { padding: 40px 20px 20px; text-align: center; }
-        .container { padding: 0 20px; max-width: 600px; margin: 0 auto; }
-        
-        .admin-form { padding: 20px; margin-bottom: 20px; }
+        body { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; min-height: 100vh; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; }
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
         .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 14px; color: var(--text-muted); }
-        .ios-input { width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; color: white; font-size: 16px; outline: none; transition: 0.3s; }
-        .ios-input:focus { border-color: var(--ios-blue); }
-        .btn-add { width: 100%; background: var(--ios-blue); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
-        .candidate-list { display: flex; flex-direction: column; gap: 10px; }
-        .candidate-card { display: flex; align-items: center; padding: 10px 15px; }
-        .candidate-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
-        .candidate-info { flex-grow: 1; }
-        .candidate-name { font-size: 16px; font-weight: 600; }
-        .btn-delete { background: rgba(255, 69, 58, 0.2); color: var(--ios-red); border: 1px solid var(--ios-red); padding: 6px 12px; border-radius: 15px; cursor: pointer; }
+        .ios-input { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 10px; color: white; outline: none; }
+        .btn-add { width: 100%; background: var(--ios-blue); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .file-upload-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
+        .file-upload-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; }
+        .btn-upload { background: rgba(255,255,255,0.1); border: 1px dashed var(--ios-blue); color: var(--ios-blue); padding: 12px; border-radius: 10px; text-align: center; width: 100%; }
+        #preview-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: none; margin: 10px auto; border: 2px solid var(--ios-blue); }
+        .candidate-card { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .candidate-card img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>QUẢN LÝ ỨNG VIÊN</h2>
-        <p style="color: var(--text-muted); font-size: 14px;">Thêm mới hoặc Xóa</p>
-    </div>
     <div class="container">
-        <div class="glass-panel admin-form">
+        <h2 style="text-align:center; margin-bottom: 20px;">QUẢN LÝ ỨNG VIÊN</h2>
+        
+        <div class="glass-panel">
             <div class="input-group">
-                <label>Tên ứng viên</label>
-                <input type="text" id="cand-name" class="ios-input" placeholder="Nhập tên...">
+                <input type="text" id="cand-name" class="ios-input" placeholder="Tên ứng viên...">
             </div>
-            <div class="input-group">
-                <label>Link ảnh (URL)</label>
-                <input type="text" id="cand-img" class="ios-input" placeholder="https://link-anh-cua-ban.jpg">
+            <div class="input-group file-upload-wrapper">
+                <div class="btn-upload"><i class="fas fa-camera"></i> Chọn ảnh từ thiết bị</div>
+                <input type="file" id="cand-file" accept="image/*" onchange="processImage(event)">
+            </div>
+            <div style="text-align: center;">
+                <img id="preview-img" src="" alt="Preview">
             </div>
             <button class="btn-add" onclick="addCandidate()">THÊM ỨNG VIÊN</button>
         </div>
-        
-        <h3 style="margin: 20px 0 10px; font-size: 16px;">Danh sách hiện tại:</h3>
-        <div class="candidate-list" id="admin-list"></div>
+
+        <h3>Danh sách:</h3>
+        <div class="glass-panel" id="admin-list" style="padding: 10px;"></div>
     </div>
 
     <script>
-        const firebaseConfig = {
-            databaseURL: "https://keyquocdat-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
+        const firebaseConfig = { databaseURL: "https://keyquocdat-default-rtdb.asia-southeast1.firebasedatabase.app" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const candidatesRef = firebase.database().ref('candidates');
+
+        let currentBase64 = "";
+
+        // Tự động nén ảnh cho nhẹ DB
+        function processImage(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 150; // Kích thước ảnh đại diện
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    currentBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    const preview = document.getElementById('preview-img');
+                    preview.src = currentBase64;
+                    preview.style.display = 'block';
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
 
         candidatesRef.on('value', snapshot => {
             const adminList = document.getElementById('admin-list');
             adminList.innerHTML = '';
-            
             snapshot.forEach(child => {
                 const cand = { id: child.key, ...child.val() };
-                const defaultImg = "https://ui-avatars.com/api/?name=" + encodeURIComponent(cand.name) + "&background=random";
-                const imgSource = cand.imageUrl ? cand.imageUrl : defaultImg;
-                
+                const imgSource = cand.imageUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent(cand.name);
                 adminList.innerHTML += `
-                    <div class="glass-panel candidate-card">
-                        <img src="${imgSource}" class="candidate-img" onerror="this.src='${defaultImg}'">
-                        <div class="candidate-info">
-                            <div class="candidate-name">${cand.name}</div>
-                            <div style="font-size: 12px; color: #aaa;">${cand.votes} votes</div>
-                        </div>
-                        <button class="btn-delete" onclick="deleteCandidate('${cand.id}')">Xóa</button>
+                    <div class="candidate-card">
+                        <img src="${imgSource}">
+                        <div style="flex-grow:1">${cand.name} <br><small style="color:#aaa">${cand.votes} votes</small></div>
+                        <button onclick="candidatesRef.child('${cand.id}').remove()" style="background:red; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Xóa</button>
                     </div>
                 `;
             });
@@ -93,20 +104,15 @@
 
         function addCandidate() {
             const name = document.getElementById('cand-name').value.trim();
-            const img = document.getElementById('cand-img').value.trim();
             if(!name) return alert("Vui lòng nhập tên!");
 
-            candidatesRef.push({ name: name, imageUrl: img, votes: 0 }).then(() => {
+            candidatesRef.push({ name: name, imageUrl: currentBase64, votes: 0 }).then(() => {
                 document.getElementById('cand-name').value = '';
-                document.getElementById('cand-img').value = '';
-                alert("Đã thêm thành công!");
+                document.getElementById('cand-file').value = '';
+                document.getElementById('preview-img').style.display = 'none';
+                currentBase64 = "";
+                alert("Đã thêm!");
             });
-        }
-
-        function deleteCandidate(id) {
-            if(confirm("Xóa người này khỏi danh sách?")) {
-                candidatesRef.child(id).remove();
-            }
         }
     </script>
 </body>
