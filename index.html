@@ -2,181 +2,96 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iOS 26.4 - Mua Gói Dự Đoán</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bảng Xếp Hạng Lớp</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --ios-bg: #000000;
-            --ios-card: #1c1c1e;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-main: #ffffff;
+            --text-muted: #ebebf599;
             --ios-blue: #0A84FF;
-            --ios-green: #32D74B;
             --ios-red: #FF453A;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-            background-color: var(--ios-bg);
-            color: white;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 50px;
-        }
-
-        /* Ví tiền phong cách Dynamic Island */
-        .wallet-island {
-            background: var(--ios-card);
-            padding: 15px 25px;
-            border-radius: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 320px;
-            border: 1px solid #333;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .balance-label { font-size: 12px; color: #8e8e93; }
-        .balance-value { font-size: 22px; font-weight: 600; }
-
-        /* Nút nạp tiền nhanh */
-        .btn-add {
-            background: var(--ios-green);
-            border: none; color: white;
-            padding: 8px 15px; border-radius: 15px;
-            font-weight: bold; cursor: pointer;
-        }
-
-        /* Danh sách 4 gói */
-        .package-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .card {
-            background: var(--ios-card);
-            padding: 20px;
-            border-radius: 25px;
-            text-align: center;
-            border: 1px solid #2c2c2e;
-        }
-
-        .card h3 { margin: 10px 0; font-size: 16px; }
-        .card .price { color: var(--ios-blue); font-weight: bold; margin-bottom: 15px; }
-
-        .btn-buy {
-            background: white;
-            color: black;
-            border: none;
-            padding: 10px 0;
-            width: 100%;
-            border-radius: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .btn-buy:active { opacity: 0.7; }
-
-        /* Modal nạp tiền */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; 
-            width: 100%; height: 100%; background: rgba(0,0,0,0.8);
-            justify-content: center; align-items: center; z-index: 1000;
-        }
-        .modal-box {
-            background: #2c2c2e; padding: 25px; border-radius: 25px;
-            width: 280px; text-align: center;
-        }
-        input {
-            width: 100%; padding: 12px; margin: 15px 0;
-            border-radius: 10px; border: none; background: #3a3a3c; color: white;
-            text-align: center; font-size: 18px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: var(--text-main); min-height: 100vh; padding-bottom: 40px; }
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+        .header { padding: 50px 20px 30px; text-align: center; }
+        .header h1 { font-size: 28px; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .header p { color: var(--text-muted); font-size: 15px; margin-top: 5px; }
+        .container { padding: 0 20px; max-width: 600px; margin: 0 auto; }
+        .candidate-list { display: flex; flex-direction: column; gap: 15px; }
+        .candidate-card { display: flex; align-items: center; padding: 15px; transition: transform 0.2s ease; }
+        .candidate-card:active { transform: scale(0.97); }
+        .candidate-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.3); margin-right: 15px; }
+        .candidate-info { flex-grow: 1; }
+        .candidate-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+        .candidate-votes { font-size: 14px; color: var(--text-muted); }
+        .vote-btn { background: var(--ios-blue); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(10, 132, 255, 0.4); }
+        .vote-btn:active { opacity: 0.7; }
     </style>
 </head>
 <body>
-
-    <div class="wallet-island">
-        <div>
-            <div class="balance-label">SỐ DƯ CỦA BẠN</div>
-            <div class="balance-value" id="moneyDisplay">0đ</div>
-        </div>
-        <button class="btn-add" onclick="toggleModal(true)">NẠP</button>
+    <div class="header">
+        <h1>BẢNG XẾP HẠNG</h1>
+        <p>Bình chọn Những Thằng Ngu Nhất Hành Tinh</p>
     </div>
-
-    <div class="package-grid">
-        <div class="card">
-            <h3>Gói VIP 1</h3>
-            <div class="price">50.000đ</div>
-            <button class="btn-buy" onclick="handlePurchase('Gói VIP 1')">Mua Ngay</button>
-        </div>
-        <div class="card">
-            <h3>Gói VIP 2</h3>
-            <div class="price">50.000đ</div>
-            <button class="btn-buy" onclick="handlePurchase('Gói VIP 2')">Mua Ngay</button>
-        </div>
-        <div class="card">
-            <h3>Gói VIP 3</h3>
-            <div class="price">50.000đ</div>
-            <button class="btn-buy" onclick="handlePurchase('Gói VIP 3')">Mua Ngay</button>
-        </div>
-        <div class="card">
-            <h3>Gói VIP 4</h3>
-            <div class="price">50.000đ</div>
-            <button class="btn-buy" onclick="handlePurchase('Gói VIP 4')">Mua Ngay</button>
-        </div>
-    </div>
-
-    <div class="modal" id="modalNap">
-        <div class="modal-box">
-            <h3>Nạp Tiền</h3>
-            <input type="number" id="inputNap" placeholder="Nhập số tiền">
-            <button class="btn-buy" style="background: var(--ios-green); color: white;" onclick="processDeposit()">Xác Nhận</button>
-            <p style="color: #8e8e93; cursor: pointer; margin-top: 15px;" onclick="toggleModal(false)">Đóng</p>
+    <div class="container">
+        <div class="candidate-list" id="voting-list">
+            <div style="text-align:center; padding: 20px; color: var(--text-muted);">
+                <i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>Đang tải dữ liệu...
+            </div>
         </div>
     </div>
 
     <script>
-        let balance = 0;
-        const PACKAGE_PRICE = 50000;
+        const firebaseConfig = {
+            databaseURL: "https://keyquocdat-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const candidatesRef = firebase.database().ref('candidates');
 
-        function toggleModal(show) {
-            document.getElementById('modalNap').style.display = show ? 'flex' : 'none';
-        }
+        candidatesRef.on('value', snapshot => {
+            const votingList = document.getElementById('voting-list');
+            votingList.innerHTML = '';
+            let candidates = [];
+            
+            snapshot.forEach(child => {
+                candidates.push({ id: child.key, ...child.val() });
+            });
+            candidates.sort((a, b) => b.votes - a.votes);
 
-        function processDeposit() {
-            let amount = document.getElementById('inputNap').value;
-            if (amount > 0) {
-                balance += parseInt(amount);
-                updateUI();
-                toggleModal(false);
-                document.getElementById('inputNap').value = '';
+            if(candidates.length === 0) {
+                votingList.innerHTML = `<div style="text-align:center; color:#888;">Chưa có dữ liệu.</div>`;
+                return;
             }
-        }
 
-        function updateUI() {
-            document.getElementById('moneyDisplay').innerText = balance.toLocaleString('vi-VN') + 'đ';
-        }
+            candidates.forEach(cand => {
+                const defaultImg = "https://ui-avatars.com/api/?name=" + encodeURIComponent(cand.name) + "&background=random";
+                const imgSource = cand.imageUrl ? cand.imageUrl : defaultImg;
+                votingList.innerHTML += `
+                    <div class="glass-panel candidate-card">
+                        <img src="${imgSource}" class="candidate-img" onerror="this.src='${defaultImg}'">
+                        <div class="candidate-info">
+                            <div class="candidate-name">${cand.name}</div>
+                            <div class="candidate-votes"><i class="fas fa-heart" style="color:var(--ios-red); font-size:12px;"></i> ${cand.votes} lượt vote</div>
+                        </div>
+                        <button class="vote-btn" onclick="vote('${cand.id}', ${cand.votes})">Vote</button>
+                    </div>
+                `;
+            });
+        });
 
-        function handlePurchase(packageName) {
-            if (balance >= PACKAGE_PRICE) {
-                balance -= PACKAGE_PRICE;
-                updateUI();
-                alert('Thanh toán thành công ' + packageName + '! Đang chuyển hướng...');
-                
-                // Chuyển sang trang float.html sau 1 giây
-                setTimeout(() => {
-                    window.location.href = 'float.html';
-                }, 1000);
-            } else {
-                alert('Số dư không đủ! Bạn cần ít nhất 50.000đ');
-            }
+        function vote(id, currentVotes) {
+            candidatesRef.child(id).update({ votes: currentVotes + 1 });
+            if (navigator.vibrate) navigator.vibrate(50);
         }
     </script>
 </body>
