@@ -10,21 +10,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --ios-blue: #0A84FF;
-        }
+        :root { var(--glass-bg): rgba(255, 255, 255, 0.05); var(--glass-border): rgba(255, 255, 255, 0.1); var(--ios-blue): #0A84FF; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-        
         body { background: #000; color: #fff; overflow-x: hidden; scroll-behavior: smooth; }
         
-        /* Hiệu ứng Loading */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
         .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--ios-blue); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Background Động */
         .bg-glow { position: fixed; width: 300px; height: 300px; background: radial-gradient(circle, rgba(10,132,255,0.4) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; top: -100px; left: -100px; z-index: -1; animation: float 10s infinite alternate; }
         .bg-glow-2 { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(142,68,255,0.3) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; bottom: -150px; right: -100px; z-index: -1; animation: float 8s infinite alternate-reverse; }
         @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 50px); } }
@@ -35,14 +28,11 @@
         .scroll-down { font-size: 30px; color: #fff; animation: bounce 2s infinite; text-decoration: none; }
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(10px); } }
 
-        .container { padding: 40px 20px; max-width: 600px; margin: 0 auto; min-height: 100vh; }
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; min-height: 100vh; }
         .section-title { font-size: 24px; font-weight: bold; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
         .candidate-list { display: flex; flex-direction: column; gap: 15px; }
         
-        .glass-panel { 
-            background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; display: flex; align-items: center;
-            opacity: 0; transform: translateY(50px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; display: flex; align-items: center; opacity: 0; transform: translateY(50px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         .glass-panel.show { opacity: 1; transform: translateY(0); }
         .candidate-img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid rgba(255,255,255,0.1); }
         .candidate-info { flex-grow: 1; }
@@ -50,29 +40,36 @@
         .vote-btn { background: rgba(10,132,255,0.15); color: var(--ios-blue); border: 1px solid var(--ios-blue); padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         
         #banned-screen { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #111; z-index: 10000; flex-direction: column; justify-content: center; align-items: center; color: #FF453A; text-align: center; padding: 20px;}
+        
+        /* Box thông báo trạng thái user */
+        #user-status-box { display: none; background: rgba(10, 132, 255, 0.1); border: 1px solid var(--ios-blue); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 30px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
     </style>
 </head>
 <body>
-    <div id="loader">
-        <div class="spinner"></div>
-        <p style="color:#aaa; font-weight:600;">Đang khởi tạo bảo mật...</p>
-    </div>
+    <div id="loader"><div class="spinner"></div><p style="color:#aaa;">Đang khởi tạo...</p></div>
 
     <div id="banned-screen">
         <i class="fas fa-ban" style="font-size: 60px; margin-bottom: 20px;"></i>
         <h2>TRUY CẬP BỊ TỪ CHỐI</h2>
-        <p style="color:#aaa; margin-top:10px;">Thiết bị hoặc IP của bạn đã bị quản trị viên chặn do nghi ngờ spam.</p>
+        <p style="color:#aaa; margin-top:10px;">Thiết bị hoặc IP của bạn đã bị quản trị viên chặn.</p>
     </div>
 
     <div class="bg-glow"></div><div class="bg-glow-2"></div>
 
     <div class="hero">
-        <h1>VOTING</h1>
-        <p>Bình chọn cho những thằng ngu nhất hành tinh. Mỗi người chỉ được vinh danh 1 lần duy nhất!</p>
+        <h1>VOTING EVENT</h1>
+        <p>Bình chọn cho gương mặt ấn tượng nhất. Mỗi người chỉ được vinh danh 1 lần duy nhất!</p>
         <a href="#vote-section" class="scroll-down"><i class="fas fa-chevron-down"></i></a>
     </div>
 
     <div class="container" id="vote-section">
+        <div id="user-status-box">
+            <span>Bạn đã vote với tên: <b id="my-current-name" style="color: var(--ios-blue); font-size: 18px;"></b></span>
+            <br>
+            <button id="btn-edit-name" onclick="editName()" style="margin-top: 10px; background: var(--ios-blue); color: white; border: none; padding: 8px 20px; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 13px;"><i class="fas fa-pen"></i> Sửa tên</button>
+        </div>
+
         <div class="section-title">Bảng Xếp Hạng Trực Tiếp</div>
         <div class="candidate-list" id="voting-list"></div>
     </div>
@@ -85,35 +82,27 @@
         let userIP = "Unknown";
         let userDevice = navigator.userAgent;
 
-        // 1. Khởi tạo & Kiểm tra IP
         async function initApp() {
             try {
-                // Lấy IP thật qua API
                 const res = await fetch('https://api.ipify.org?format=json');
                 const data = await res.json();
                 userIP = data.ip;
-            } catch(e) { console.log("Không lấy được IP"); }
+            } catch(e) {}
 
-            const safeIP = userIP.replace(/\./g, '_'); // Firebase không cho lưu dấu chấm (.)
+            const safeIP = userIP.replace(/\./g, '_');
 
-            // Kiểm tra xem IP có bị ban không
             db.ref('banned_ips/' + safeIP).once('value', snap => {
                 if(snap.exists()) {
                     document.getElementById('banned-screen').style.display = 'flex';
                     document.getElementById('loader').style.display = 'none';
-                    return; // Ngưng chạy code nếu bị ban
+                    return; 
                 }
 
-                // Không bị ban -> Lưu lịch sử truy cập cho Admin soi
-                db.ref('visitors/' + safeIP).set({
-                    ip: userIP,
-                    device: userDevice,
-                    time: new Date().toLocaleString('vi-VN')
-                });
-
-                loadCandidates();
+                db.ref('visitors/' + safeIP).set({ ip: userIP, device: userDevice, time: new Date().toLocaleString('vi-VN') });
                 
-                // Tắt loader mượt mà
+                loadCandidates();
+                checkUserUI(); 
+                
                 setTimeout(() => {
                     document.getElementById('loader').style.opacity = '0';
                     setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
@@ -121,7 +110,6 @@
             });
         }
 
-        // 2. Load ứng viên & Observer lướt
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
         }, { threshold: 0.1 });
@@ -153,36 +141,73 @@
             });
         }
 
-        // 3. Logic Vote & Kiểm tra trùng tên
-        function processVote(candId, candName) {
-            // Check bộ nhớ đệm thiết bị
+        function checkUserUI() {
             if(localStorage.getItem('has_voted')) {
-                return alert("Máy này đã vote rồi! Không được spam bạn nhé.");
+                document.getElementById('user-status-box').style.display = 'block';
+                document.getElementById('my-current-name').innerText = localStorage.getItem('my_raw_name');
+                // Nút sửa tên luôn hiện, không bị ẩn nữa
+            }
+        }
+
+        function processVote(candId, candName) {
+            if(localStorage.getItem('has_voted')) {
+                return alert("Bạn đã dùng thiết bị này để vote rồi! Kéo lên trên cùng để xem và sửa tên của bạn.");
             }
 
-            const voterName = prompt(`Nhập Tên/Biệt danh của bạn để xác nhận vote cho ${candName}:\n(Chỉ được vote 1 lần duy nhất)`);
+            const voterName = prompt(`Nhập Tên/Biệt danh của bạn để vote cho ${candName}:`);
             if(!voterName || voterName.trim() === "") return;
 
             const safeVoterName = voterName.trim().toLowerCase().replace(/[.#$\[\]]/g, '');
 
-            // Check trên database xem tên này vote chưa
             db.ref('voted_names/' + safeVoterName).once('value', snap => {
                 if(snap.exists()) {
-                    alert("Tên này đã được sử dụng để vote rồi. Vui lòng không gian lận!");
+                    alert("Tên này đã có người dùng. Vui lòng thêm số hoặc biệt danh khác!");
                 } else {
-                    // Cập nhật vote
                     db.ref('candidates/' + candId + '/votes').set(firebase.database.ServerValue.increment(1));
-                    // Lưu tên người vote
                     db.ref('voted_names/' + safeVoterName).set({ time: new Date().toLocaleString('vi-VN'), votedFor: candName });
                     
                     localStorage.setItem('has_voted', 'true');
-                    alert(`Cảm ơn ${voterName}! Bạn đã vote thành công.`);
+                    localStorage.setItem('my_voted_name', safeVoterName); 
+                    localStorage.setItem('my_raw_name', voterName.trim()); 
+                    localStorage.setItem('voted_for_cand', candName); 
+                    
+                    alert(`Tuyệt vời! Đã ghi nhận vote từ ${voterName}.`);
                     if (navigator.vibrate) navigator.vibrate(50);
+                    checkUserUI();
                 }
             });
         }
 
-        // Khởi động
+        function editName() {
+            const oldSafeName = localStorage.getItem('my_voted_name');
+            const candName = localStorage.getItem('voted_for_cand');
+
+            const newName = prompt("Nhập tên mới của bạn:");
+            if(!newName || newName.trim() === "") return;
+
+            const safeNewName = newName.trim().toLowerCase().replace(/[.#$\[\]]/g, '');
+            if(safeNewName === oldSafeName) return alert("Tên mới y hệt tên cũ!");
+
+            db.ref('voted_names/' + safeNewName).once('value', snap => {
+                if(snap.exists()) {
+                    alert("Tên mới này đã bị người khác giành mất! Vui lòng thử tên khác.");
+                } else {
+                    // Xóa tên cũ đi
+                    db.ref('voted_names/' + oldSafeName).remove();
+                    // Lưu tên mới vào
+                    db.ref('voted_names/' + safeNewName).set({ time: new Date().toLocaleString('vi-VN'), votedFor: candName + " (Đã đổi tên)" });
+                    
+                    // Cập nhật lại kho lưu trữ của máy
+                    localStorage.setItem('my_voted_name', safeNewName);
+                    localStorage.setItem('my_raw_name', newName.trim());
+                    // Đã xóa giới hạn 1 lần
+                    
+                    alert("Đổi tên thành công!");
+                    checkUserUI();
+                }
+            });
+        }
+
         window.onload = initApp;
     </script>
 </body>
