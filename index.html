@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
   </head>
-  <body class="panel-active">
+  <body>
     <div class="base-bg-layer"></div>
     <div class="dynamic-bg"></div>
     <canvas id="space-canvas"></canvas>
@@ -33,7 +33,7 @@
         <div id="fp-percent" class="mono-text font-bold text-primary mt-15" style="font-size: 24px;">0%</div>
       </div>
     </div>
-    <div id="home-intro" class="home-intro" style="display: none;">
+    <div id="home-intro" class="home-intro" style="z-index: 10;">
       <div class="intro-glass-panel glass-card">
         <div class="brand-header">
           <div class="brand-logo">
@@ -97,7 +97,7 @@
         </button>
       </div>
     </div>
-    <div class="app-layout" id="main-panel" style="display: flex; z-index: 10; position: relative;">
+    <div class="app-layout" id="main-panel" style="display: none; z-index: 10; position: relative;">
       <aside class="sidebar-glass">
         <div class="sidebar-header">
           <div class="brand-logo-small">
@@ -777,7 +777,7 @@
     <script src="app.js"></script>
     <script src="feature-hooks.js"></script>
     <script src="features.js"></script>
-    <!-- ĐÃ XÓA SCRIPT KEY.JS Ở ĐÂY -->
+    <!-- ĐÃ BỎ GỌI FILE KEY.JS Ở ĐÂY LÀ XONG -->
     <script>
       
           window.themeColor = '#00e5ff';
