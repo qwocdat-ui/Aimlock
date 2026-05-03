@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>DRAKONX TECH</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <canvas id="particles-canvas"></canvas>
+    <div class="container">
+      <header class="header">
+        <h1 class="title">
+          <b>DRAKONX TECH</b>
+          <span class="badge">
+            <i class="fas fa-check"></i>
+          </span>
+        </h1>
+        <button class="special-menu-btn" id="special-menu-btn">
+          <i class="fas fa-bolt"></i>
+          <span>CHỨC NĂNG 2</span>
+        </button>
+      </header>
+      <div id="announce-bar" class="announce hidden">
+        <div class="announce-content">
+          <i class="fas fa-bullhorn"></i>
+          <span class="announce-title">ĐÃ NÂNG CẤP DRAG SENSI → 𝐏𝐀𝐍𝐄𝐋 𝐈𝐎𝐒</span>
+          <div class="announce-tags">
+            <span class="tag">
+              <i class="fas fa-hand-sparkles"></i>
+              LUX Touch+
+            </span>
+            <span class="tag">
+              <i class="fas fa-arrows-rotate"></i>
+              DPI động
+            </span>
+            <span class="tag">
+              <i class="fas fa-floppy-disk"></i>
+              Tự lưu cấu hình
+            </span>
+            <span class="tag">
+              <i class="fas fa-rocket"></i>
+              Chế độ Pro
+            </span>
+            <span class="tag">
+              <i class="fas fa-shield-halved"></i>
+              Bộ lọc rung
+            </span>
+          </div>
+        </div>
+        <button class="announce-close" id="announce-close" aria-label="Đóng">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <main class="main-content">
+        <section class="section">
+          <h2 class="section-title">
+            <i class="fas fa-cube section-icon"></i>
+            CHỨC NĂNG DRAKONX TECH
+          </h2>
+          <div class="function-item">
+            <div class="function-content">
+              <span class="function-text">
+                AIMLOCK ( Khoá Tâm Đầu )
+                <span class="sub"></span>
+              </span>
+            </div>
+            <div class="toggle-switch" data-function="config">
+              <input type="checkbox" id="config-toggle" class="toggle-input">
+              <label for="config-toggle" class="toggle-label">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="function-item">
+            <div class="function-content">
+              <span class="function-text">
+                FEATHER AIM ( Nhẹ Tâm )
+                <span class="sub"></span>
+              </span>
+            </div>
+            <div class="toggle-switch" data-function="lux">
+              <input type="checkbox" id="lux-toggle" class="toggle-input">
+              <label for="lux-toggle" class="toggle-label">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="function-item">
+            <div class="function-content">
+              <span class="function-text">
+                STEADY HOLD ( Đầm Tâm )
+                <span class="sub"></span>
+              </span>
+            </div>
+            <div class="toggle-switch" data-function="fix-rung">
+              <input type="checkbox" id="fix-rung-toggle" class="toggle-input">
+              <label for="fix-rung-toggle" class="toggle-label">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="function-item">
+            <div class="function-content">
+              <span class="function-text">
+                ANCHOR AIM ( Ghìm Tâm )
+                <span class="sub"></span>
+              </span>
+            </div>
+            <div class="toggle-switch" data-function="nhe-tam">
+              <input type="checkbox" id="nhe-tam-toggle" class="toggle-input">
+              <label for="nhe-tam-toggle" class="toggle-label">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="function-item">
+            <div class="function-content">
+              <span class="function-text">
+                DRIFT FIX ( Fix Lạc Đạn )
+                <span class="sub"></span>
+              </span>
+            </div>
+            <div class="toggle-switch" data-function="lock-dau">
+              <input type="checkbox" id="lock-dau-toggle" class="toggle-input">
+              <label for="lock-dau-toggle" class="toggle-label">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+        <section class="section">
+          <h2 class="section-title">
+            <i class="fas fa-cube section-icon"></i>
+            ĐỘ NHẠY DRAKONX TECH
+          </h2>
+          <div class="sensi-item">
+            <div class="sensi-content">
+              <div class="sensi-icon">
+                <i class="fas fa-mobile-alt"></i>
+              </div>
+              <div class="sensi-info">
+                <span class="sensi-label">DEVICE:</span>
+                <span class="sensi-value">IPHONE</span>
+              </div>
+            </div>
+          </div>
+          <div class="sensi-item">
+            <div class="sensi-content">
+              <div class="sensi-icon">
+                <i class="fas fa-palette"></i>
+              </div>
+              <div class="sensi-info">
+                <span class="sensi-label">CHẾ ĐỘ TURBO :</span>
+                <div class="dropdown">
+                  <select id="mode-select" class="dropdown-select">
+                    <option value="muot-ma">Mượt Mà</option>
+                    <option value="cao-cap">Cao Cấp</option>
+                    <option value="tieu-chuan">Tiêu Chuẩn</option>
+                  </select>
+                  <i class="fas fa-chevron-down dropdown-arrow"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sensi-item">
+            <div class="sensi-content">
+              <div class="sensi-icon">
+                <i class="fas fa-crosshairs"></i>
+              </div>
+              <div class="sensi-info">
+                <span class="sensi-label">DPI FULER :</span>
+                <div class="dropdown">
+                  <select id="dpi-select" class="dropdown-select">
+                    <option value="1.0">1.0x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2.0">2.0x</option>
+                    <option value="2.5">2.5x</option>
+                    <option value="3.0">3.0x</option>
+                  </select>
+                  <i class="fas fa-chevron-down dropdown-arrow"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="extra-section">
+          <h2 class="section-title">
+            <i class="fas fa-cube section-icon"></i>
+            RAM/CPU MONITOR REALTIME
+          </h2>
+          <div class="console-mobile">
+            <div class="cm-grid">
+              <div class="cm-panel cm-panel-charts">
+                <h4>Realtime charts</h4>
+                <div class="cm-charts">
+                  <div class="cm-chart-box">
+                    <div class="cm-chart-header">
+                      <div class="cm-label">
+                        CPU Load
+                        <span id="cm-cpu-text">--%</span>
+                      </div>
+                      <div class="cm-pill">
+                        <span>Estimate</span>
+                        <b id="cm-cpu-est">Frame time</b>
+                      </div>
+                    </div>
+                    <canvas id="cm-cpu-canvas" width="900" height="240"></canvas>
+                  </div>
+                  <div class="cm-chart-box">
+                    <div class="cm-chart-header">
+                      <div class="cm-label">
+                        RAM Usage
+                        <span id="cm-ram-text">--</span>
+                      </div>
+                      <div class="cm-pill">
+                        <span>Source</span>
+                        <b id="cm-ram-src">Auto</b>
+                      </div>
+                    </div>
+                    <canvas id="cm-ram-canvas" width="900" height="240"></canvas>
+                    <div class="cm-stats">
+                      <div class="cm-stat">
+                        <div class="cm-k">JS Heap Used</div>
+                        <div class="cm-v" id="cm-heap-used">--</div>
+                      </div>
+                      <div class="cm-stat">
+                        <div class="cm-k">JS Heap Limit</div>
+                        <div class="cm-v" id="cm-heap-limit">--</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="cm-topbar">
+                <div class="cm-title">
+                  <h3></h3>
+                </div>
+                <div class="cm-controls">
+                  <button id="cm-btn-ram" class="cm-btn cm-btn-primary">Dọn RAM</button>
+                  <button id="cm-btn-cpu" class="cm-btn cm-btn-primary">Dọn CPU</button>
+                  <button id="cm-btn-fps" class="cm-btn cm-btn-danger">Lock FPS: OFF</button>
+                  <div class="cm-pill">
+                    <span>FPS</span>
+                    <b id="cm-fps-now">--</b>
+                    <span>• Mode</span>
+                    <b id="cm-mode-now">Unlocked</b>
+                  </div>
+                </div>
+              </div>
+              <div class="cm-panel cm-panel-console">
+                <h4>Console</h4>
+                <div id="cm-console" class="cm-console" aria-live="polite"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <button class="activate-btn" id="activate-btn">
+          <i class="fas fa-power-off"></i>
+          BOOSTER DRAKONX TECH 🇻🇳
+        </button>
+        <div class="footer">© 2026 BẢNG QUYỀN DEV CHI CUONG</div>
+      </main>
+      <div id="special-menu" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+          <div class="modal-header">
+            <h3 id="modal-title">
+              <i class="fas fa-bolt"></i>
+              DRAKONX TECH PRO 2
+            </h3>
+            <button class="modal-close" id="modal-close" aria-label="Đóng">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-infobox" id="modal-infobox">
+            <i class="fas fa-circle-info"></i>
+            Drakonx Tech Pro 2 Đã Mở Hãy Sẵn Sàn Làm Chủ Cuộc Chơi Nào
+            <button class="infobox-close" id="infobox-close" aria-label="Đóng">
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul class="feature-list">
+              <li class="feature">
+                <label>
+                  <input type="checkbox" id="f-anti-shake">
+                  HEAD FIX
+                </label>
+              </li>
+              <li class="feature">
+                <label>
+                  <input type="checkbox" id="f-aim-assist">
+                  SHAKE FIX
+                </label>
+              </li>
+              <li class="feature">
+                <label>
+                  <input type="checkbox" id="f-touch-boost">
+                  QUICK HOLD
+                </label>
+              </li>
+              <li class="feature">
+                <label>
+                  <input type="checkbox" id="f-pro-mode">
+                  AIMMOD
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-actions">
+            <button id="modal-apply" class="btn-primary">
+              <i class="fas fa-check"></i>
+              ON DRAKONX TECH PRO 2
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="site-notice" class="notice-modal hidden" aria-hidden="true">
+        <div class="notice-backdrop" id="notice-backdrop"></div>
+        <div class="notice-card" role="dialog" aria-modal="true" aria-labelledby="notice-title">
+          <div class="notice-head">
+            <h4 id="notice-title" class="notice-title">
+              𝐃𝐄𝐕 𝐂𝐇𝐈 𝐂𝐔𝐎𝐍𝐆
+              <span class="verify">
+                <i class="fas fa-check"></i>
+              </span>
+            </h4>
+            <button class="notice-close" id="notice-close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="notice-body">
+            <p class="notice-lead">App Hỗ Trợ Kéo Tâm Độc Quyền Bởi Developer : Dev Chi Cuong Quản Lí</p>
+            <ul class="notice-list" id="notice-list"></ul>
+            <div class="notice-actions">
+              <button class="btn-gold" id="notice-3h">
+                <i class="fas fa-clock"></i>
+                Ẩn Trong 3 Giờ
+              </button>
+              <button class="btn-red" id="notice-ok">
+                <i class="fas fa-circle-check"></i>
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="panel-actions.js">
+      </script>
+      <script src="app.js">
+      </script>
+      <script src="key.js">
+      </script>
+    </div>
+  </body>
+</html>
