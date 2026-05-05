@@ -2,62 +2,42 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>PayloadDisplayName</key>
-    <string>Tối Ưu Máy &amp; Cảm Ứng (FF)</string>
-    <key>PayloadDescription</key>
-    <string>Bản cấu hình giúp giảm độ trễ hệ thống và tối ưu thời gian phản hồi cảm ứng màn hình.</string>
-    <key>PayloadIdentifier</key>
-    <string>com.ff.optimize.touchspeed</string>
-    <key>PayloadRemovalDisallowed</key>
-    <false/>
-    <key>PayloadType</key>
-    <string>Configuration</string>
-    <key>PayloadUUID</key>
-    <string>A1B2C3D4-5678-90AB-CDEF-1234567890AB</string>
-    <key>PayloadVersion</key>
-    <integer>1</integer>
-    
-    <key>PayloadContent</key>
-    <array>
-        <dict>
-            <key>PayloadType</key>
-            <string>com.apple.Accessibility</string>
-            <key>PayloadVersion</key>
-            <integer>1</integer>
-            <key>PayloadIdentifier</key>
-            <string>com.apple.Accessibility.reducemotion</string>
-            <key>PayloadUUID</key>
-            <string>B2C3D4E5-6789-0ABC-DEF1-234567890ABC</string>
-            <key>ReduceMotionEnabled</key>
-            <true/>
-        </dict>
-        
-        <dict>
-            <key>PayloadType</key>
-            <string>com.apple.defaults.managed</string>
-            <key>PayloadVersion</key>
-            <integer>1</integer>
-            <key>PayloadIdentifier</key>
-            <string>com.apple.touch.speed</string>
-            <key>PayloadUUID</key>
-            <string>C3D4E5F6-7890-ABCD-EF12-34567890ABCD</string>
-            <key>PayloadContent</key>
-            <array>
-                <dict>
-                    <key>DefaultsDomainName</key>
-                    <string>com.apple.Accessibility</string>
-                    <key>DefaultsData</key>
-                    <dict>
-                        <key>TouchAccommodationsEnabled</key>
-                        <true/>
-                        <key>TouchAccommodationsHoldDuration</key>
-                        <real>0.1</real>
-                        <key>TouchAccommodationsIgnoreRepeatEnabled</key>
-                        <false/>
-                    </dict>
-                </dict>
-            </array>
-        </dict>
-    </array>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>FullScreen</key>
+			<true/>
+			<key>IsRemovable</key>
+			<true/>
+			<key>Label</key>
+			<string>Quốc Đạt</string>
+			<key>PayloadDescription</key>
+			<string>Web Clip cho Quoc Dat App</string>
+			<key>PayloadDisplayName</key>
+			<string>Quốc Đạt Web App</string>
+			<key>PayloadIdentifier</key>
+			<string>com.quocdat.webclip.847291</string>
+			<key>PayloadType</key>
+			<string>com.apple.webClip.managed</string>
+			<key>PayloadUUID</key>
+			<string>E9C1A2B3-D4E5-4F6A-8B7C-9D0E1F2A3B4C</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>URL</key>
+			<string>https://quocdat.vercel.app/</string>
+		</dict>
+	</array>
+	<key>PayloadDisplayName</key>
+	<string>Cấu hình Quốc Đạt App</string>
+	<key>PayloadIdentifier</key>
+	<string>com.quocdat.profile.webapp</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
 </dict>
 </plist>
